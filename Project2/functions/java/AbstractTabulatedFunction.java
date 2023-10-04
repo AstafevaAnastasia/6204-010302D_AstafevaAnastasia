@@ -9,6 +9,12 @@ public abstract class AbstractTabulatedFunction implements TabulatedFunction {
 
     protected abstract double interpolate(double x, int floorIndex);
 
+    protected double inerpolate(double x,double leftX, double rightX, double leftY, double rightY) {
+        double v =(x-leftX);
+        double u = ((rightY - leftY)/(rightX - leftX));
+        double y = leftY + u*v;
+        return y;
+    }
     @Override
     public double apply(double x) {
         if (x < leftBound()) {
