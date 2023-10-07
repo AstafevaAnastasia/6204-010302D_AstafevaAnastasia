@@ -2,6 +2,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 
+
 public class LinkedListTabulatedFunctionTest {
 
     private final double[] xValues = {0.0, 1.0, 2.0, 3.0, 4.0};
@@ -62,14 +63,22 @@ public class LinkedListTabulatedFunctionTest {
     @Test
     public void testApply() {
         assertEquals(4.0, function.apply(2.0), 0.0001);
-        assertThrows(IllegalArgumentException.class, () -> function.apply(-1.0));
-        assertThrows(IllegalArgumentException.class, () -> function.apply(5.0));
+        assertEquals(2.5, function.apply(1.5), 0.0001);
+        assertEquals(-1.0, function.apply(-1.0), 0.0001);
     }
 
-    @Test
+    /*@Test
     public void testInterpolate() {
         assertEquals(2.5, ((LinkedListTabulatedFunction) function).interpolate(1.5, 1), 0.0001);
         assertThrows(IllegalArgumentException.class, () -> ((LinkedListTabulatedFunction) function).interpolate(1.5, 4));
+    }*/
+
+    @Test
+    public void testInterpolate() {
+        LinkedListTabulatedFunction.Node floorNode = ((LinkedListTabulatedFunction) function).floorNodeOfX(1.5);
+        assertEquals(2.5, ((LinkedListTabulatedFunction) function).interpolate(1.5, floorNode), 0.0001);
+        assertEquals(4.0, ((LinkedListTabulatedFunction) function).interpolate(2.0, floorNode), 0.0001);
+        assertThrows(IllegalArgumentException.class, () -> ((LinkedListTabulatedFunction) function).interpolate(1.5, null));
     }
 
     @Test

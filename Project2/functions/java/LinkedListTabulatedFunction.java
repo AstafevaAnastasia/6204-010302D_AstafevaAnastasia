@@ -3,7 +3,7 @@ public class LinkedListTabulatedFunction implements TabulatedFunction {
     private int count;
     private Node head;
 
-    private class Node {
+    protected class Node {
         public double x;
         public double y;
         public Node next;
@@ -124,7 +124,7 @@ public class LinkedListTabulatedFunction implements TabulatedFunction {
         return head.prev.x;
     }
 
-    @Override
+    /*@Override
     public double apply(double x) {
         if (x < leftBound() || x > rightBound()) {
             throw new IllegalArgumentException("Argument out of range: " + x);
@@ -141,9 +141,23 @@ public class LinkedListTabulatedFunction implements TabulatedFunction {
         } else {
             return getY(i);
         }
+    }*/
+
+   @Override
+    public double apply(double x) {
+        Node floorNode = floorNodeOfX(x);
+        if (x < head.x) {
+            return extrapolateLeft(x);
+        } else if (x > head.prev.x) {
+            return extrapolateRight(x);
+        } else if (floorNode.x == x) {
+            return floorNode.y;
+        } else {
+            return interpolate(x, floorNode);
+        }
     }
 
-    public double interpolate(double x, int floorIndex) {
+     /*public double interpolate(double x, int floorIndex) {
         if (floorIndex < 0 || floorIndex >= getCount() - 1) {
             throw new IllegalArgumentException("Index out of range: " + floorIndex);
         }
@@ -151,6 +165,17 @@ public class LinkedListTabulatedFunction implements TabulatedFunction {
         double y1 = getY(floorIndex);
         double x2 = getX(floorIndex + 1);
         double y2 = getY(floorIndex + 1);
+        return y1 + (y2 - y1) * (x - x1) / (x2 - x1);
+    }*/
+
+    public double interpolate(double x, Node floorNode) {
+        if (floorNode == null || floorNode.next == null) {
+            throw new IllegalArgumentException("Node is not valid for interpolation");
+        }
+        double x1 = floorNode.x;
+        double y1 = floorNode.y;
+        double x2 = floorNode.next.x;
+        double y2 = floorNode.next.y;
         return y1 + (y2 - y1) * (x - x1) / (x2 - x1);
     }
 
@@ -191,5 +216,30 @@ public class LinkedListTabulatedFunction implements TabulatedFunction {
             }
         }
         return i - 1;
+    }
+
+    /*protected Node floorNodeOfX(double x) {
+        Node node = head;
+        for (int i = 0; i < count; i++) {
+            if (node.x <= x) {
+                return node;
+            }
+            node = node.next;
+        }
+        return head.prev;
+    }*/
+
+    protected Node floorNodeOfX(double x) {
+        Node prevNode = null;
+        Node currentNode = head;
+        while (currentNode != null) {
+            if (currentNode.x <= x) {
+                prevNode = currentNode;
+                currentNode = currentNode.next;
+            } else {
+                return (prevNode != null) ? prevNode : new Node(x, 0);
+            }
+        }
+        return new Node(x, count);
     }
 }
