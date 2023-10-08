@@ -6,7 +6,7 @@ public class LinkedListTabulatedFunctionTest {
 
     private final double[] xValues = {0.0, 1.0, 2.0, 3.0, 4.0};
     private final double[] yValues = {0.0, 1.0, 4.0, 9.0, 16.0};
-    private final TabulatedFunction function = new LinkedListTabulatedFunction(xValues, yValues);
+    private TabulatedFunction function = new LinkedListTabulatedFunction(xValues, yValues);
 
     @Test
     public void testGetCount() {
@@ -90,5 +90,17 @@ public class LinkedListTabulatedFunctionTest {
         assertEquals(-1, ((LinkedListTabulatedFunction) function).floorIndexOfX(-1.0), 0.0001);
         assertEquals(3, ((LinkedListTabulatedFunction) function).floorIndexOfX(3.5), 0.0001);
         assertEquals(3, ((LinkedListTabulatedFunction) function).floorIndexOfX(4.0), 0.0001);
+    }
+
+    @Test
+    public void testRemove(){
+        ((LinkedListTabulatedFunction) function).remove(0);
+        assertEquals(4, function.getCount());
+        assertEquals(1.0, function.getX(0), 0.0001);
+        assertEquals(1.0, function.getY(0), 0.0001);
+        ((LinkedListTabulatedFunction) function).remove(2);
+        assertEquals(3, function.getCount());
+        assertEquals(4.0, function.getX(2), 0.0001);
+        assertEquals(16.0, function.getY(2), 0.0001);
     }
 }
