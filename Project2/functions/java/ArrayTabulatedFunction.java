@@ -2,7 +2,7 @@ import java.util.Arrays;
 
 // класс табулированных функций, значения которых хранятся в массиве
 // данный класс расширает реализацию класса AbsractTabulatedFunction и реализует интерфейс Removable
-public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements Removable {
+public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements Removable, Insertable {
     private double[] xValues; // приватное поле значений x
     private double[] yValues; // приватное поле значений y
     private int count; // приватное поле количества элементов
@@ -46,6 +46,35 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
         yValues = Arrays.copyOf(yValues, yValues.length - 1);
         //ArrayTabulatedFunction(newX, newY);
     }
+
+    //Переопределение метода insert из интерфейса Insertable для 3-го задания
+    @Override
+    public void insert(double x, double y) {
+        int index = indexOfX(x);
+        if (index != -1) {
+            yValues[index] = y;
+        } else {
+            double[] newXValues = new double[count + 1];
+            double[] newYValues = new double[count + 1];
+            int insertIndex = 0;
+            for (int i = 0; i < count; i++) {
+                if (x > xValues[i]) {
+                    newXValues[i] = xValues[i];
+                    newYValues[i] = yValues[i];
+                    insertIndex = i + 1;
+                } else {
+                    newXValues[i + 1] = xValues[i];
+                    newYValues[i + 1] = yValues[i];
+                }
+            }
+            newXValues[insertIndex] = x;
+            newYValues[insertIndex] = y;
+            xValues = newXValues;
+            yValues = newYValues;
+            ++count;
+        }
+    }
+
     @Override
     public double getX(int index) { // получаем икс
         if (index < 0 || index >= count) {
