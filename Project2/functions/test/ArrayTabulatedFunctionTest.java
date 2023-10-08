@@ -103,4 +103,14 @@ public class ArrayTabulatedFunctionTest {
         double[] yValues = {4.0, 5.0, 6.0};
         return new ArrayTabulatedFunction(xValues, yValues);
     }
+
+    //Покрытие метода insert тестами
+    @Test
+    public void testInsert() {
+        ArrayTabulatedFunction function = createFunction();
+        function.insert(2.5, 5.5);
+        Assert.assertEquals(4, function.getCount()); //проверяем, что кол-во элементов увеличилось на 1
+        Assert.assertEquals(2.5, function.getX(2), 0.0001);
+        Assert.assertEquals(5.5, function.getY(2), 0.0001);
+    }
 }
