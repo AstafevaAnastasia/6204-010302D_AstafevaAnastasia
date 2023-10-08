@@ -11,7 +11,6 @@ public class CompositeFunction implements MathFunction {
     public double apply(double x) {
         // Сначала применяем первую функцию, а затем вторую к результату первой
         double intermediateResult = firstFunction.apply(x);
-        double finalResult = secondFunction.apply(intermediateResult);
-        return finalResult;
+        return secondFunction.apply(intermediateResult);
     }
 }
