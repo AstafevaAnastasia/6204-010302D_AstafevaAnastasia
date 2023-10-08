@@ -1,4 +1,4 @@
-public class LinkedListTabulatedFunction implements TabulatedFunction {
+public class LinkedListTabulatedFunction implements TabulatedFunction, Insertable {
 
     private int count;
     private Node head;
@@ -71,6 +71,43 @@ public class LinkedListTabulatedFunction implements TabulatedFunction {
                 node = node.prev;
             }
             return node;
+        }
+    }
+
+    @Override
+    public void insert(double x, double y) {
+        if (head == null) {
+            addNode(x, y);
+        } else {
+            Node temp = head.next;
+            for (int i = 0; temp != head ; temp = temp.next) {
+                if(temp.x == x) {
+                    temp.y = y;
+                    temp = head;
+                    ++count;
+                }
+                else if(x >head.prev.x) {
+                    Node newN = new Node(x, y);
+                    head.prev.next = newN;
+                    head.prev = newN;
+                    temp = head;
+                    ++count;
+                }
+                else if (x < temp.x && x > temp.prev.x) {
+                    Node newN = new Node(x, y);
+                    temp.prev.next = newN;
+                    temp.prev = newN;
+                    temp = head;
+                    ++count;
+                }
+                else if (x < head.x) {
+                    Node newN = new Node(x, y);
+                    head.prev.next = newN;
+                    head.prev = newN;
+                    head = newN;
+                    ++count;
+                }
+            }
         }
     }
 
