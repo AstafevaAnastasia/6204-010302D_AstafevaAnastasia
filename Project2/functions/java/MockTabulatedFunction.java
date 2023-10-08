@@ -1,9 +1,13 @@
+// mock-объект для того, чтобы потом можно было протестировать класс абстрактных
+// табулированных функций
 public class MockTabulatedFunction extends AbstractTabulatedFunction {
+    // ну все поля приватные завершенные с переменными
     private final double x0;
     private final double x1;
     private final double y0;
     private final double y1;
 
+    // конструктор
     public MockTabulatedFunction(double x0, double x1, double y0, double y1) {
         this.x0 = x0;
         this.x1 = x1;
@@ -13,6 +17,7 @@ public class MockTabulatedFunction extends AbstractTabulatedFunction {
     }
 
     @Override
+    // ну и как-то простенько реализуем методы для табулированной функции
     protected int floorIndexOfX(double x) {
         if (x < x0) {
             return 0;

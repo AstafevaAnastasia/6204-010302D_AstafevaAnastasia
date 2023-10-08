@@ -1,3 +1,4 @@
+// класс AbstractTabulatedFunction реализующий интерфейс TabulatedFunction
 public abstract class AbstractTabulatedFunction implements TabulatedFunction {
     protected int count;
 
@@ -23,11 +24,15 @@ public abstract class AbstractTabulatedFunction implements TabulatedFunction {
             return extrapolateRight(x);
         } else {
             int floorIndex = floorIndexOfX(x);
-            if (floorIndex < 0) {
-                return getY(0);
-            } else if (floorIndex >= count - 1) {
-                return getY(count - 1);
-            } else {
+            int index = indexOfX(x);
+            if (index != -1) {
+                return getY(index);
+            }
+          //  if (floorIndex < 0) {
+            //    return getY(0);
+         //   } else if (floorIndex >= count - 1) {
+         //       return getY(count - 1);
+            else {
                 return interpolate(x, floorIndex);
             }
         }
