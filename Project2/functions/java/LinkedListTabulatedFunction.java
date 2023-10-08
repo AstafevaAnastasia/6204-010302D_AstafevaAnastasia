@@ -1,4 +1,4 @@
-public class LinkedListTabulatedFunction implements TabulatedFunction, Insertable {
+public class LinkedListTabulatedFunction implements TabulatedFunction, Insertable, Removable {
 
     private int count;
     private Node head;
@@ -228,5 +228,20 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Insertabl
             }
         }
         return i - 1;
+    }
+
+    @Override
+    public void remove(int index) {
+        if (count == 1) {
+            head = null;
+        } else {
+            Node node = getNode(index);
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
+            if (node == head) {
+                head = node.next;
+            }
+        }
+        count--;
     }
 }
