@@ -16,7 +16,7 @@ public class MockTabulatedFunctionTest {
     @Test
     public void testApply() {
         AbstractTabulatedFunction function = new MockTabulatedFunction(-1.0, 1.0, -1.0, 1.0);
-        assertEquals(1.0, function.apply(0.0), EPSILON);
+        assertEquals(0.0, function.apply(0.0), EPSILON);
         assertEquals(-1.0, function.apply(-2.0), EPSILON);
         assertEquals(1.0, function.apply(2.0), EPSILON);
     }

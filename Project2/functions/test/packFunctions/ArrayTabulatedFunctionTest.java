@@ -69,7 +69,7 @@ public class ArrayTabulatedFunctionTest {
     public void testInterpolate() {
         // Assuming the function is already created
         ArrayTabulatedFunction function = createFunction();
-        Assert.assertEquals(5.5, function.interpolate(1.5, 1), 0.0);
+        Assert.assertEquals(4.5, function.interpolate(1.5, 1), 0.0);
     }
 
     @Test
@@ -83,21 +83,21 @@ public class ArrayTabulatedFunctionTest {
     public void testExtrapolateLeft() {
         // Assuming the function is already created
         ArrayTabulatedFunction function = createFunction();
-        Assert.assertEquals(2.5, function.extrapolateLeft(0.5), 0.0);
+        Assert.assertEquals(3.5, function.extrapolateLeft(0.5), 0.0);
     }
 
     @Test
     public void testExtrapolateRight() {
         // Assuming the function is already created
         ArrayTabulatedFunction function = createFunction();
-        Assert.assertEquals(7.0, function.extrapolateRight(3.5), 0.0);
+        Assert.assertEquals(6.5, function.extrapolateRight(3.5), 0.0);
     }
 
     @Test
     public void testInterpolateSingle() {
         // Assuming the function is already created
         ArrayTabulatedFunction function = createFunction();
-        Assert.assertEquals(6.5, function.interpolate(2.5), 0.0);
+        Assert.assertEquals(5.5, function.interpolate(2.5), 0.0);
     }
 
     private ArrayTabulatedFunction createFunction() {
