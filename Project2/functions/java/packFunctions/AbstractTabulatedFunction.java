@@ -28,10 +28,6 @@ public abstract class AbstractTabulatedFunction implements TabulatedFunction {
             if (index != -1) {
                 return getY(index);
             }
-          //  if (floorIndex < 0) {
-            //    return getY(0);
-         //   } else if (floorIndex >= count - 1) {
-         //       return getY(count - 1);
             else {
                 return interpolate(x, floorIndex);
             }
