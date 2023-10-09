@@ -1,13 +1,15 @@
-public class LinkedListTabulatedFunction implements TabulatedFunction, Insertable {
+// Класс LinkedListTabulatedFunction реализует интерфейсы TabulatedFunction, Insertable, Removable
+public class LinkedListTabulatedFunction implements TabulatedFunction, Insertable, Removable {
 
-    private int count;
-    private Node head;
+    private int count; // количество элементов в списке
+    private Node head; // ссылка на первый элемент списка
 
-    private class Node {
-        public double x;
-        public double y;
-        public Node next;
-        public Node prev;
+    // Вложенный класс Node описывает узел списка
+    protected class Node {
+        public double x; // значение аргумента функции
+        public double y; // значение функции
+        public Node next; // ссылка на следующий элемент списка
+        public Node prev; // ссылка на предыдущий элемент списка
 
         public Node(double x, double y) {
             this.x = x;
@@ -17,55 +19,60 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Insertabl
         }
     }
 
+    // Метод addNode добавляет новый узел в конец списка
     private void addNode(double x, double y) {
         Node node = new Node(x, y);
-        if (head == null) {
+        if (head == null) {  // если список пустой, то новый узел становится первым и единственным
             head = node;
             head.next = head;
             head.prev = head;
-        } else {
+        } else { // иначе новый узел добавляется в конец списка
             Node last = head.prev;
             node.next = head;
             node.prev = last;
             last.next = node;
             head.prev = node;
         }
-        count++;
+        count++; // увеличиваем количество элементов в списке на 1
     }
 
+    // Конструктор принимает два массива значений аргумента и функции и заполняет ими список
     public LinkedListTabulatedFunction(double[] xValues, double[] yValues) {
         for (int i = 0; i < xValues.length; i++) {
             addNode(xValues[i], yValues[i]);
         }
     }
 
+    /* Конструктор принимает объект MathFunction, начальное и конечное значения аргумента и количество точек
+     и заполняет список значениями функции на равноотстоящих точках на отрезке [xFrom, xTo] */
     public LinkedListTabulatedFunction(MathFunction source, double xFrom, double xTo, int count) {
-        if (xFrom > xTo) {
+        if (xFrom > xTo) { // если начальное значение больше конечного, меняем их местами
             double temp = xFrom;
             xFrom = xTo;
             xTo = temp;
         }
-        if (count < 2) {
+        if (count < 2) {  // если количество точек меньше 2, выбрасываем исключение
             throw new IllegalArgumentException("count < 2");
         }
-        double step = (xTo - xFrom) / (count - 1);
-        for (int i = 0; i < count; i++) {
+        double step = (xTo - xFrom) / (count - 1);  // вычисляем расстояние между соседними точками
+        for (int i = 0; i < count; i++) { // заполняем список значениями функции на равноотстоящих точках
             double x = xFrom + i * step;
             addNode(x, source.apply(x));
         }
     }
 
+    // Метод getNode возвращает узел списка по его индексу
     private Node getNode(int index) {
-        if (index < 0 || index >= count) {
+        if (index < 0 || index >= count) { // если индекс выходит за границы списка, выбрасываем исключение
             throw new IndexOutOfBoundsException("Index out of range: " + index);
         }
-        if (index < count / 2) {
+        if (index < count / 2) {  // если индекс меньше половины размера списка, ищем узел с начала списка
             Node node = head;
             for (int i = 0; i < index; i++) {
                 node = node.next;
             }
             return node;
-        } else {
+        } else { // иначе ищем узел с конца списка
             Node node = head.prev;
             for (int i = count - 1; i > index; i--) {
                 node = node.prev;
@@ -74,6 +81,7 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Insertabl
         }
     }
 
+    // Метод insert вставляет новый узел в список на нужное место
     @Override
     public void insert(double x, double y) {
         if (head == null) {
@@ -111,26 +119,31 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Insertabl
         }
     }
 
+    // Метод getCount возвращает количество элементов в списке
     @Override
     public int getCount() {
         return count;
     }
 
+    // Метод getX возвращает значение аргумента функции по индексу
     @Override
     public double getX(int index) {
         return getNode(index).x;
     }
 
+    // Метод getY возвращает значение функции по индексу
     @Override
     public double getY(int index) {
         return getNode(index).y;
     }
 
+    // Метод setY изменяет значение функции по индексу
     @Override
     public void setY(int index, double value) {
         getNode(index).y = value;
     }
 
+    // Метод indexOfX возвращает индекс первого узла с заданным значением аргумента или -1, если такого узла нет
     @Override
     public int indexOfX(double x) {
         for (int i = 0; i < count; i++) {
@@ -141,6 +154,7 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Insertabl
         return -1;
     }
 
+    // Метод indexOfY возвращает индекс первого узла с заданным значением функции или -1, если такого узла нет
     @Override
     public int indexOfY(double y) {
         for (int i = 0; i < count; i++) {
@@ -151,19 +165,35 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Insertabl
         return -1;
     }
 
+    // Метод leftBound возвращает значение аргумента первого узла списка.
     @Override
     public double leftBound() {
         return head.x;
     }
 
+    // Метод rightBound возвращает значение аргумента последнего узла списка.
     @Override
     public double rightBound() {
         return head.prev.x;
     }
 
+    // Метод apply вычисляет значение функции в точке x методом линейной интерполяции между ближайшими узлами.
     @Override
     public double apply(double x) {
-        if (x < leftBound() || x > rightBound()) {
+        Node floorNode = floorNodeOfX(x);
+        if (x < head.x) { // Если x меньше значения аргумента первого узла списка, то используется метод extrapolateLeft.
+            return extrapolateLeft(x);
+        } else if (x > head.prev.x) { // Если x больше значения аргумента последнего узла списка, то используется метод extrapolateRight.
+            return extrapolateRight(x);
+        } else if (floorNode.x == x) { // Если найден узел списка с аргументом, равным x, то возвращается значение его функции.
+            return floorNode.y;
+        } else { // В остальных случаях вычисляется значение функции методом interpolate между ближайшими узлами.
+            return interpolate(x, floorNode);
+        }
+    }
+    /* @Override
+    public double apply(double x) {
+        if (x < leftBound() || x > rightBound()) { // Если аргумент находится за пределами списка, выбрасываем исключение
             throw new IllegalArgumentException("Argument out of range: " + x);
         }
         int i = floorIndexOfX(x);
@@ -178,9 +208,9 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Insertabl
         } else {
             return getY(i);
         }
-    }
+    } */
 
-    public double interpolate(double x, int floorIndex) {
+    /* public double interpolate(double x, int floorIndex) {
         if (floorIndex < 0 || floorIndex >= getCount() - 1) {
             throw new IllegalArgumentException("Index out of range: " + floorIndex);
         }
@@ -189,8 +219,23 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Insertabl
         double x2 = getX(floorIndex + 1);
         double y2 = getY(floorIndex + 1);
         return y1 + (y2 - y1) * (x - x1) / (x2 - x1);
+    } */
+
+    /* Метод interpolate вычисляет значение функции в точке x методом линейной интерполяции между узлами
+    с индексами floorNode и floorNode.next, если floorNode не равен null и имеет следующий узел.
+    Иначе выбрасывается исключение IllegalArgumentException. */
+    public double interpolate(double x, Node floorNode) {
+        if (floorNode == null || floorNode.next == null) {
+            throw new IllegalArgumentException("Node is not valid for interpolation");
+        }
+        double x1 = floorNode.x;
+        double y1 = floorNode.y;
+        double x2 = floorNode.next.x;
+        double y2 = floorNode.next.y;
+        return y1 + (y2 - y1) * (x - x1) / (x2 - x1);
     }
 
+    // Метод extrapolateLeft вычисляет значение функции в точке x методом экстраполяции слева на основе первых двух узлов.
     public double extrapolateLeft(double x) {
         if (getCount() < 2) {
             return getY(0);
@@ -202,6 +247,7 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Insertabl
         return y1 + (y2 - y1) * (x - x1) / (x2 - x1);
     }
 
+    // Метод extrapolateRight вычисляет значение функции в точке x методом экстраполяции справа на основе последних двух узлов.
     public double extrapolateRight(double x) {
         if (getCount() < 2) {
             return getY(0);
@@ -213,6 +259,7 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Insertabl
         return y2 + (y2 - y1) * (x - x2) / (x2 - x1);
     }
 
+    // Метод floorIndexOfX возвращает индекс узла списка с максимальным значением аргумента, которое не превышает x.
     public int floorIndexOfX(double x) {
         if (x < leftBound()) {
             return -1;
@@ -228,5 +275,38 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Insertabl
             }
         }
         return i - 1;
+    }
+
+    // Метод floorNodeOfX ищет узел списка с аргументом, меньшим или равным заданному значению x.
+    // prevNode - предыдущий узел списка.
+    // currentNode - текущий узел списка.
+    protected Node floorNodeOfX(double x) {
+        Node prevNode = null;
+        Node currentNode = head;
+        while (currentNode != null) {
+            if (currentNode.x <= x) { // если значение аргумента текущего узла меньше или равно заданному значению x
+                prevNode = currentNode; // запоминаем текущий узел как предыдущий
+                currentNode = currentNode.next; // переходим к следующему узлу
+            } else { // если значение аргумента текущего узла больше заданного значения x
+                return (prevNode != null) ? prevNode : new Node(x, 0);  // возвращаем предыдущий узел, если он есть, иначе создаем новый узел
+            }
+        }
+        return new Node(x, count); // если список пуст, возвращаем новый узел с функцией, равной количеству узлов в списке
+    }
+
+    // Метод remove удаляет узел списка с заданным индексом.
+    @Override
+    public void remove(int index) {
+        if (count == 1) { // Если список содержит только один узел, он удаляется полностью.
+            head = null;
+        } else {
+            Node node = getNode(index); // Получаем узел с заданным индексом.
+            node.prev.next = node.next; // Смещаем соседние узлы
+            node.next.prev = node.prev;
+            if (node == head) { // Если это был первый узел, то следующий теперь головной
+                head = node.next;
+            }
+        }
+        count--; // Уменьшаем кол-во элементов
     }
 }

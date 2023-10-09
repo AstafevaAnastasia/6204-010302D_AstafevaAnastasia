@@ -2,7 +2,7 @@ import java.util.Arrays;
 
 // класс табулированных функций, значения которых хранятся в массиве
 // данный класс расширает реализацию класса AbsractTabulatedFunction и реализует интерфейс Removable
-public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements Removable {
+public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements Removable, Insertable {
     private double[] xValues; // приватное поле значений x
     private double[] yValues; // приватное поле значений y
     private int count; // приватное поле количества элементов
@@ -46,6 +46,36 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
         yValues = Arrays.copyOf(yValues, yValues.length - 1);
         //ArrayTabulatedFunction(newX, newY);
     }
+
+    //Переопределение метода insert из интерфейса Insertable для 3-го задания
+    // Метод insert() вставляет точку с заданными значениями аргумента и функции в табличную функцию.
+    @Override
+    public void insert(double x, double y) {
+        int index = indexOfX(x); // Сначала находится индекс точки с заданным значением аргумента в массиве xValues с помощью метода indexOfX().
+        if (index != -1) { // Если точка с таким значением аргумента уже есть в табличной функции, то значение функции для этой точки заменяется на новое значение.
+            yValues[index] = y;
+        } else { // Если точки с таким значением аргумента еще нет в табличной функции, то создаются новые массивы newXValues и newYValues размером на 1 больше, чем у текущих массивов xValues и yValues.
+            double[] newXValues = new double[count + 1];
+            double[] newYValues = new double[count + 1];
+            int insertIndex = 0;
+            for (int i = 0; i < count; i++) { // Затем происходит цикл по всем точкам табличной функции, в котором определяется индекс insertIndex новой точки в массивах newXValues и newYValues.
+                if (x > xValues[i]) { // Если значение аргумента новой точки больше, чем у текущей точки, то текущая точка копируется в новые массивы, а индекс insertIndex увеличивается на 1.
+                    newXValues[i] = xValues[i];
+                    newYValues[i] = yValues[i];
+                    insertIndex = i + 1;
+                } else { // Если значение аргумента новой точки меньше или равно, то текущая точка копируется в новые массивы со сдвигом на 1 индекс вправо.
+                    newXValues[i + 1] = xValues[i];
+                    newYValues[i + 1] = yValues[i];
+                }
+            }
+            newXValues[insertIndex] = x; // После цикла новая точка с заданными значениями аргумента и функции вставляется в новые массивы на позицию с индексом insertIndex.
+            newYValues[insertIndex] = y;
+            xValues = newXValues;
+            yValues = newYValues;
+            ++count; // Новые массивы xValues и yValues заменяют текущие массивы, а количество точек count увеличивается на 1.
+        }
+    }
+
     @Override
     public double getX(int index) { // получаем икс
         if (index < 0 || index >= count) {
