@@ -8,6 +8,8 @@ public class LinkedListTabulatedFunctionTest {
     private final double[] yValues = {0.0, 1.0, 4.0, 9.0, 16.0};
     private TabulatedFunction function = new LinkedListTabulatedFunction(xValues, yValues);
 
+
+
     @Test
     public void testGetCount() {
         assertEquals(5, function.getCount(), 0.0001);
