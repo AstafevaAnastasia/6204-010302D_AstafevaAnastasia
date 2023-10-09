@@ -6,13 +6,15 @@ public class CompositeFunctionTest {
 
     // Задаем значения аргумента и функции для cosx и cos2x
     double[] xValuesCos = {0.0, Math.PI/6, Math.PI/4, Math.PI/3, Math.PI/2, 2*Math.PI/3, 3*Math.PI/4, 5*Math.PI/6, Math.PI};
-    double[] yValuesCos = {1.0, 0.866025, 0.707107, 0.5, 0, -0.5, -0,707107, -0.866025, -1.0};
+    double[] yValuesCos = {1.0, 0.866025, 0.707107, 0.5, 0, -0.5, -0.707107, -0.866025, -1.0};
     double[] xValuesCos2 = {0.0, Math.PI/6, Math.PI/4, Math.PI/3, Math.PI/2, 2*Math.PI/3, 3*Math.PI/4, 5*Math.PI/6, Math.PI};
     double[] yValuesCos2 = {1.0, 0.5, 0, -0.5, -1.0, -0.5, 0, 0.5, 1.0};
 
     // Создаем функции
     MathFunction f = new CosineFunction();
     MathFunction g = new CosTwoArgFunction();
+
+    // Списки
     MathFunction testFunction1 = new LinkedListTabulatedFunction(xValuesCos, yValuesCos);
     MathFunction testFunction2 = new LinkedListTabulatedFunction(xValuesCos2, yValuesCos2);
 
@@ -23,25 +25,28 @@ public class CompositeFunctionTest {
         assertEquals(-0.1833, h.apply(0.5), 0.0001); // Тестируем применение сложной функции
         // В этом тесте мы ожидаем, что результат h(0.5) будет приближенно равен cos(cos(0.5) + cos(0.5))
 
-        CompositeFunction h1 = new CompositeFunction(testFunction1,testFunction2); // Создаем сложную функцию h(x) = g(f(x)) (табулированные)
+        CompositeFunction h1 = new CompositeFunction(testFunction1,testFunction2); // Создаем сложную функцию h(x) = g(f(x)) (список)
         assertEquals(1.0, h1.apply(Math.PI/2), 0.0001);
         // В этом тесте мы ожидаем, что результат h1(PI/2) будет приближенно равен cos(cos(PI/2) + cos(PI/2))
     }
 
     @Test
     public void testIndexOfX() {
+        // Тесты для списка
         assertEquals(1, ((LinkedListTabulatedFunction)testFunction1).indexOfX(Math.PI/6), 0.0001);
         assertEquals(4, ((LinkedListTabulatedFunction)testFunction2).indexOfX(Math.PI/2), 0.0001);
     }
 
     @Test
     public void testApply() {
+        // Тесты для списка
         assertEquals(-0.416147,  ((LinkedListTabulatedFunction)testFunction1).apply( 2), 0.1);
         assertEquals(-0.653644,  ((LinkedListTabulatedFunction)testFunction2).apply(2), 0.1);
     }
 
     @Test
     public void testInterpolate() {
+        // Тесты для списка
         LinkedListTabulatedFunction.Node floorNode1 = ((LinkedListTabulatedFunction) testFunction1).floorNodeOfX(1.0);
         LinkedListTabulatedFunction.Node floorNode2 = ((LinkedListTabulatedFunction) testFunction2).floorNodeOfX(1.0);
         assertEquals(0.540302, ((LinkedListTabulatedFunction) testFunction1).interpolate(1.0, floorNode1), 0.1);
