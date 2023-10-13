@@ -10,7 +10,18 @@ public class LinkedListTabulatedFunctionTest {
     private final double[] yValues = {0.0, 1.0, 4.0, 9.0, 16.0};
     private TabulatedFunction function = new LinkedListTabulatedFunction(xValues, yValues);
 
-
+    @Test
+    public void testLinkedListTabulatedFunction() {
+        MathFunction mathFunction = new CosineFunction();
+        double startX = 0;
+        double endX = Math.PI;
+        int pointsCount = 5;
+        TabulatedFunction tabulatedFunction = new LinkedListTabulatedFunction(mathFunction, startX, endX, pointsCount);
+        assertEquals(startX, tabulatedFunction.leftBound(), 0.01);
+        assertEquals(endX, tabulatedFunction.rightBound(), 0.01);
+        assertEquals(pointsCount, tabulatedFunction.getCount());
+        assertEquals(3*Math.PI/4, tabulatedFunction.getX(3), 0.01);
+    }
 
     @Test
     public void testGetCount() {
