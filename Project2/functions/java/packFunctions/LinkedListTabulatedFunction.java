@@ -83,7 +83,6 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Insertabl
     }
 
     // Метод insert вставляет новый узел в список на нужное место
-    @Override
     public void insert(double x, double y) {
         if (head == null) {
             addNode(x, y);
@@ -121,31 +120,26 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Insertabl
     }
 
     // Метод getCount возвращает количество элементов в списке
-    @Override
     public int getCount() {
         return count;
     }
 
     // Метод getX возвращает значение аргумента функции по индексу
-    @Override
     public double getX(int index) {
         return getNode(index).x;
     }
 
     // Метод getY возвращает значение функции по индексу
-    @Override
     public double getY(int index) {
         return getNode(index).y;
     }
 
     // Метод setY изменяет значение функции по индексу
-    @Override
     public void setY(int index, double value) {
         getNode(index).y = value;
     }
 
     // Метод indexOfX возвращает индекс первого узла с заданным значением аргумента или -1, если такого узла нет
-    @Override
     public int indexOfX(double x) {
         for (int i = 0; i < count; i++) {
             if (getX(i) == x) {
@@ -156,7 +150,6 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Insertabl
     }
 
     // Метод indexOfY возвращает индекс первого узла с заданным значением функции или -1, если такого узла нет
-    @Override
     public int indexOfY(double y) {
         for (int i = 0; i < count; i++) {
             if (getY(i) == y) {
@@ -167,19 +160,16 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Insertabl
     }
 
     // Метод leftBound возвращает значение аргумента первого узла списка.
-    @Override
     public double leftBound() {
         return head.x;
     }
 
     // Метод rightBound возвращает значение аргумента последнего узла списка.
-    @Override
     public double rightBound() {
         return head.prev.x;
     }
 
     // Метод apply вычисляет значение функции в точке x методом линейной интерполяции между ближайшими узлами.
-    @Override
     public double apply(double x) {
         Node floorNode = floorNodeOfX(x);
         if (x < head.x) { // Если x меньше значения аргумента первого узла списка, то используется метод extrapolateLeft.
@@ -192,35 +182,6 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Insertabl
             return interpolate(x, floorNode);
         }
     }
-    /* @Override
-    public double apply(double x) {
-        if (x < leftBound() || x > rightBound()) { // Если аргумент находится за пределами списка, выбрасываем исключение
-            throw new IllegalArgumentException("Argument out of range: " + x);
-        }
-        int i = floorIndexOfX(x);
-        if (i == -1) {
-            return getY(0);
-        } else if (i < getCount() - 1) {
-            double x1 = getX(i);
-            double y1 = getY(i);
-            double x2 = getX(i + 1);
-            double y2 = getY(i + 1);
-            return y1 + (y2 - y1) * (x - x1) / (x2 - x1);
-        } else {
-            return getY(i);
-        }
-    } */
-
-    /* public double interpolate(double x, int floorIndex) {
-        if (floorIndex < 0 || floorIndex >= getCount() - 1) {
-            throw new IllegalArgumentException("Index out of range: " + floorIndex);
-        }
-        double x1 = getX(floorIndex);
-        double y1 = getY(floorIndex);
-        double x2 = getX(floorIndex + 1);
-        double y2 = getY(floorIndex + 1);
-        return y1 + (y2 - y1) * (x - x1) / (x2 - x1);
-    } */
 
     /* Метод interpolate вычисляет значение функции в точке x методом линейной интерполяции между узлами
     с индексами floorNode и floorNode.next, если floorNode не равен null и имеет следующий узел.
@@ -296,7 +257,6 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Insertabl
     }
 
     // Метод remove удаляет узел списка с заданным индексом.
-    @Override
     public void remove(int index) {
         if (count == 1) { // Если список содержит только один узел, он удаляется полностью.
             head = null;
