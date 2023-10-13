@@ -81,12 +81,6 @@ public class LinkedListTabulatedFunctionTest {
         assertEquals(-1.0, function.apply(-1.0), 0.0001);
     }
 
-    /* @Test
-    public void testInterpolate() {
-        assertEquals(2.5, ((LinkedListTabulatedFunction) function).interpolate(1.5, 1), 0.0001);
-        assertThrows(IllegalArgumentException.class, () -> ((LinkedListTabulatedFunction) function).interpolate(1.5, 4));
-    } */
-
     @Test
     public void testInterpolate() {
         LinkedListTabulatedFunction.Node floorNode = ((LinkedListTabulatedFunction) function).floorNodeOfX(1.5);
@@ -126,4 +120,12 @@ public class LinkedListTabulatedFunctionTest {
         assertEquals(4.0, function.getX(2), 0.0001);
         assertEquals(16.0, function.getY(2), 0.0001);
     }
+
+    // Метод toString для узла тестируется через toString для списка, т.к. он там используется
+    @Test
+    public void testToString() {
+        String expected = "(0.0; 0.0), (1.0; 1.0), (2.0; 4.0), (3.0; 9.0), (4.0; 16.0)";
+        assertEquals(expected, function.toString());
+    }
+
 }

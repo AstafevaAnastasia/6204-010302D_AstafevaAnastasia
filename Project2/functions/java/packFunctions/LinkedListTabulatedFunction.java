@@ -18,6 +18,13 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Insertabl
             this.next = null;
             this.prev = null;
         }
+
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            sb.append("(").append(x).append("; ").append(y).append(")");
+            return sb.toString();
+        }
+
     }
 
     // Метод addNode добавляет новый узел в конец списка
@@ -269,5 +276,17 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Insertabl
             }
         }
         count--; // Уменьшаем кол-во элементов
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        Node current = head;
+        for (int i = 0; i < count; i++) {
+            String node = current.toString();
+            sb.append(node).append(", ");
+            current = current.next;
+        }
+        sb.delete(sb.length() - 2, sb.length()); // удаляем последнюю запятую и пробел
+        return sb.toString();
     }
 }
