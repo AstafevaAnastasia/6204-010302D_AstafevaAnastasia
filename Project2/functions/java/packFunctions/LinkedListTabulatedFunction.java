@@ -48,8 +48,6 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Insertabl
             clone.next = this.next;
             return clone;
         }
-
-
     }
 
     // Метод addNode добавляет новый узел в конец списка
