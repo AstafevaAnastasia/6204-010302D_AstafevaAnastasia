@@ -1,12 +1,16 @@
 // Класс LinkedListTabulatedFunction реализует интерфейсы TabulatedFunction, Insertable, Removable
 package packFunctions;
-public class LinkedListTabulatedFunction implements TabulatedFunction, Insertable, Removable {
+
+import java.util.Arrays;
+import java.util.Objects;
+
+public class LinkedListTabulatedFunction implements TabulatedFunction, Insertable, Removable, Cloneable {
 
     private int count; // количество элементов в списке
     private Node head; // ссылка на первый элемент списка
 
     // Вложенный класс Node описывает узел списка
-    protected class Node {
+    static class Node {
         public double x; // значение аргумента функции
         public double y; // значение функции
         public Node next; // ссылка на следующий элемент списка
@@ -24,6 +28,27 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Insertabl
             sb.append("(").append(x).append("; ").append(y).append(")");
             return sb.toString();
         }
+        public boolean equals(Object o) {
+            if (this == o) return true; // если переданный объект ссылается на текущий узел, то они равны
+            if (o == null || getClass() != o.getClass()) return false;
+            Node node = (Node) o;
+            // сравниваем координаты и ссылки на следующий и предыдущий узлы
+            return Double.compare(x, node.x) == 0 && Double.compare(y, node.y) == 0 && Objects.equals(next, node.next) && Objects.equals(prev, node.prev);
+        }
+
+        public int hashCode() {
+            int result = 31 * Double.hashCode(x);
+            result = 31 * result + Double.hashCode(y);
+            return result;
+        }
+
+        public Object clone() {
+            Node clone = new Node(x, y);
+            clone.prev = this.prev;
+            clone.next = this.next;
+            return clone;
+        }
+
 
     }
 
@@ -67,6 +92,21 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Insertabl
             double x = xFrom + i * step;
             addNode(x, source.apply(x));
         }
+    }
+
+    // Вспомогательный метод, чтобы достать координаты узла.
+    public double[][] arrayNode() {
+        double[] xValues = new double[count];
+        double[] yValues = new double[count];
+        int i = 0;
+        for (Node temp = head; temp != head.prev; temp = temp.next) {
+            xValues[i] = temp.x;
+            yValues[i] = temp.y;
+            i++;
+        }
+        xValues[count - 1] = head.prev.x;
+        yValues[count - 1] = head.prev.y;
+        return new double[][]{xValues, yValues};
     }
 
     // Метод getNode возвращает узел списка по его индексу
@@ -279,7 +319,7 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Insertabl
     }
 
     public String toString() {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(); // создаем объект StringBuilder для построения строки
         Node current = head;
         for (int i = 0; i < count; i++) {
             String node = current.toString();
@@ -288,5 +328,38 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Insertabl
         }
         sb.delete(sb.length() - 2, sb.length()); // удаляем последнюю запятую и пробел
         return sb.toString();
+    }
+
+    public boolean equals(Object o) {
+        LinkedListTabulatedFunction temp = (LinkedListTabulatedFunction) o;
+        double[][] array1 = temp.arrayNode(); // получаем двумерный массив координат узлов из переданного объекта
+        double[][] array2 = this.arrayNode(); // получаем двумерный массив координат узлов из текущего объекта
+
+        if (o.getClass() == this.getClass() && Arrays.deepEquals(array1, array2)) return true;
+        else return false;
+    }
+
+    public int hashCode() {
+        int result = 0; // инициализируем переменную результатом
+        for (Node temp = head; temp != head.prev; temp = temp.next) {
+
+            result = result * 31 + temp.hashCode();
+        }
+        result = result * 31 + head.prev.hashCode(); // вычисляем хеш-код для последнего узла и добавляем его к результату
+        return result;
+    }
+
+    public Object clone() {
+        double[] xValues = new double[count];
+        double[] yValues = new double[count];
+        int i = 0;
+        for (Node temp = head; temp != head.prev; temp = temp.next) {
+            xValues[i] = temp.x;
+            yValues[i] = temp.y;
+            i++;
+        }
+        xValues[count - 1] = head.prev.x; // добавляем координату x последнего узла в массив
+        yValues[count - 1] = head.prev.y; // добавляем координату y последнего узла в массив
+        return new LinkedListTabulatedFunction(xValues, yValues);
     }
 }
