@@ -86,10 +86,10 @@ public class LinkedListTabulatedFunctionTest {
 
     @Test
     public void testInterpolate() {
-        LinkedListTabulatedFunction.Node floorNode = ((LinkedListTabulatedFunction) function).floorNodeOfX(1.5);
-        assertEquals(2.5, ((LinkedListTabulatedFunction) function).interpolate(1.5, floorNode), 0.0001);
-        assertEquals(4.0, ((LinkedListTabulatedFunction) function).interpolate(2.0, floorNode), 0.0001);
-        assertThrows(IllegalArgumentException.class, () -> ((LinkedListTabulatedFunction) function).interpolate(1.5, null));
+        int floorIndex = ((LinkedListTabulatedFunction) function).floorIndexOfX(1.5);
+        assertEquals(2.5, ((LinkedListTabulatedFunction) function).interpolate(1.5, floorIndex), 0.0001);
+        assertEquals(4.0, ((LinkedListTabulatedFunction) function).interpolate(2.0, floorIndex), 0.0001);
+        assertThrows(IllegalArgumentException.class, () -> ((LinkedListTabulatedFunction) function).interpolate(1.5, -1));
     }
 
     @Test

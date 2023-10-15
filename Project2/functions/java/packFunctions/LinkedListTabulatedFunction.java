@@ -4,7 +4,7 @@ package packFunctions;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class LinkedListTabulatedFunction implements TabulatedFunction, Insertable, Removable, Cloneable {
+public class LinkedListTabulatedFunction extends AbstractTabulatedFunction implements Insertable, Removable, Cloneable {
 
     private int count; // количество элементов в списке
     private Node head; // ссылка на первый элемент списка
@@ -216,24 +216,28 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Insertabl
 
     // Метод apply вычисляет значение функции в точке x методом линейной интерполяции между ближайшими узлами.
     public double apply(double x) {
-        Node floorNode = floorNodeOfX(x);
+        //Node floorNode = floorNodeOfX(x);
         if (x < head.x) { // Если x меньше значения аргумента первого узла списка, то используется метод extrapolateLeft.
             return extrapolateLeft(x);
         } else if (x > head.prev.x) { // Если x больше значения аргумента последнего узла списка, то используется метод extrapolateRight.
             return extrapolateRight(x);
-        } else if (floorNode.x == x) { // Если найден узел списка с аргументом, равным x, то возвращается значение его функции.
-            return floorNode.y;
+        } else if (floorNodeOfX(x).x == x) { // Если найден узел списка с аргументом, равным x, то возвращается значение его функции.
+            return floorNodeOfX(x).y;
         } else { // В остальных случаях вычисляется значение функции методом interpolate между ближайшими узлами.
-            return interpolate(x, floorNode);
+            return interpolate(x, floorIndexOfX(x));
         }
     }
 
     /* Метод interpolate вычисляет значение функции в точке x методом линейной интерполяции между узлами
     с индексами floorNode и floorNode.next, если floorNode не равен null и имеет следующий узел.
     Иначе выбрасывается исключение IllegalArgumentException. */
-    public double interpolate(double x, Node floorNode) {
+    public double interpolate(double x, int floorIndex) {
+        Node floorNode = floorNodeOfX(x);
         if (floorNode == null || floorNode.next == null) {
             throw new IllegalArgumentException("Node is not valid for interpolation");
+        }
+        if (floorIndex < 0 || floorIndex >= getCount() - 1) {
+            throw new IllegalArgumentException("Index out of range: " + floorIndex);
         }
         double x1 = floorNode.x;
         double y1 = floorNode.y;
