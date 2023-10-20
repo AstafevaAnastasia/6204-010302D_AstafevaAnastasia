@@ -106,6 +106,34 @@ public class ArrayTabulatedFunctionTest {
         return new ArrayTabulatedFunction(xValues, yValues);
     }
 
+    @Test
+    public void testToString() {
+        ArrayTabulatedFunction f = createFunction();
+        Assert.assertEquals("[ 1.0, 4.0 ] [ 2.0, 5.0 ] [ 3.0, 6.0 ] ", f.toString());
+    }
+
+    @Test
+    public void testEquals() {
+        ArrayTabulatedFunction f = createFunction();
+        ArrayTabulatedFunction f2 =  createFunction();
+        IdentityFunction r = new IdentityFunction();
+        Assert.assertTrue(f.equals(f2));
+        Assert.assertFalse(f.equals(r));
+    }
+
+    @Test
+    public void testHashCode() {
+        ArrayTabulatedFunction f = createFunction();
+        ArrayTabulatedFunction f2 = createFunction();
+        Assert.assertEquals(f.hashCode(), f2.hashCode());
+    }
+    @Test
+    public void testClone() throws CloneNotSupportedException {
+        ArrayTabulatedFunction f = createFunction();
+        ArrayTabulatedFunction f2 = f.clone();
+        Assert.assertEquals(f, f2);
+    }
+
     //Покрытие метода insert тестами
     @Test
     public void testInsert() {

@@ -1,5 +1,6 @@
 package packFunctions;
 import java.util.Arrays;
+import java.util.Objects;
 
 
 // класс табулированных функций, значения которых хранятся в массиве
@@ -8,6 +9,38 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
     private double[] xValues; // приватное поле значений x
     private double[] yValues; // приватное поле значений y
     private int count; // приватное поле количества элементов
+
+    public String toString() {
+        String mass = "";
+        int i = 0;
+        while (i < count) {
+            mass += "[ " + xValues[i] + ", " + yValues[i++] + " ] ";
+        }
+        return mass;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        ArrayTabulatedFunction that = (ArrayTabulatedFunction) obj;
+        return Arrays.equals(xValues, that.xValues) && Arrays.equals(yValues, that.yValues);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(count);
+        result = 31 * result + Arrays.hashCode(xValues);
+        result = 31 * result + Arrays.hashCode(yValues);
+        return result;
+    }
+
+    @Override
+    public ArrayTabulatedFunction clone() throws CloneNotSupportedException {
+        double[] clonedXValues = Arrays.copyOf(this.xValues, this.xValues.length);
+        double[] clonedYValues = Arrays.copyOf(this.yValues, this.yValues.length);
+        return new ArrayTabulatedFunction(clonedXValues, clonedYValues);
+    }
 
     // конструктор
     public ArrayTabulatedFunction(double[] xValues, double[] yValues) {
@@ -37,7 +70,6 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
         }
     }
 
-    @Override
     public void remove(int index){
         for (int i = index + 1; i < xValues.length; i++) {
             xValues[i - 1] = xValues[i];
@@ -51,7 +83,6 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
 
     //Переопределение метода insert из интерфейса Insertable для 3-го задания
     // Метод insert() вставляет точку с заданными значениями аргумента и функции в табличную функцию.
-    @Override
     public void insert(double x, double y) {
         int index = indexOfX(x); // Сначала находится индекс точки с заданным значением аргумента в массиве xValues с помощью метода indexOfX().
         if (index != -1) { // Если точка с таким значением аргумента уже есть в табличной функции, то значение функции для этой точки заменяется на новое значение.
@@ -78,14 +109,13 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
         }
     }
 
-    @Override
+
     public double getX(int index) { // получаем икс
         if (index < 0 || index >= count) {
             throw new IllegalArgumentException("Index is out of range");
         }
         return xValues[index];
     }
-    @Override
     public double getY(int index) { // получаем игрек
         if (index < 0 || index >= count) {
             throw new IllegalArgumentException("Index is out of range");
@@ -93,7 +123,6 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
         return yValues[index];
     }
 
-    @Override
     public void setY(int index, double value) { // устанавливаем значение игрека
         if (index < 0 || index >= count) {
             throw new IllegalArgumentException("Index is out of range");
@@ -101,7 +130,6 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
         yValues[index] = value;
     }
 
-    @Override
     public int indexOfX(double x) { // получаем индекс икса
         for (int i = 0; i < count; i++) {
             if (xValues[i] == x) {
@@ -111,7 +139,6 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
         return -1;
     }
 
-    @Override
     public int indexOfY(double y) { // получаем индекс игрека
         for (int i = 0; i < count; i++) {
             if (yValues[i] == y) {
@@ -121,17 +148,17 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
         return -1;
     }
 
-    @Override
+
     public double leftBound() {
         return xValues[0];
     } // левая граница
 
-    @Override
+
     public double rightBound() {
         return xValues[count - 1];
     } //правая граница
 
-    @Override
+
     public double interpolate(double x, int floorIndex) {
         if (floorIndex < 0 || floorIndex >= count - 1) {
             throw new IllegalArgumentException("Index is out of range");
@@ -140,6 +167,7 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
         double x1 = xValues[floorIndex + 1];
         double y0 = yValues[floorIndex];
         double y1 = yValues[floorIndex + 1];
+
         return y0 + (y1 - y0) * (x - x0) / (x1 - x0);
     }
 
@@ -148,7 +176,7 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
     // возвращает count(количество элементов в массиве), если больше всех элементов массива
     // возвращает индекс элемента массива, если найден элемент с таким же значением
     // и возвращает индекс максимального элемента, который меньше заданного x
-    @Override
+
     protected int floorIndexOfX(double x) {
         for (int i = 0; i < count - 1; ++i) { // начинам искать тогда x, если ни одно из предыдущих условий не выполнено
             if (x < xValues[0]) { // если x меньше первого элемента
@@ -178,11 +206,10 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
                     return i;
                 }
             }
-            // This should never happen if the xValues array is properly sorted
             throw new RuntimeException("Failed to find index for x value: " + x);
         }
     }
-    @Override
+
     protected double extrapolateLeft(double x) {
         int index = searchIndex(x);
         double x1 = xValues[index];
