@@ -12,7 +12,6 @@ public class CompositeFunction implements MathFunction {
     }
 
     // Реализуем метод apply интерфейса MathFunction
-    @Override
     public double apply(double x) {
         // Сначала применяем первую функцию к аргументу x
         double intermediateResult = firstFunction.apply(x);

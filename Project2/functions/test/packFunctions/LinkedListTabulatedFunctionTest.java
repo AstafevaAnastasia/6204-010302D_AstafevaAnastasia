@@ -2,7 +2,10 @@ package packFunctions;
 
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 public class LinkedListTabulatedFunctionTest {
 
@@ -10,7 +13,18 @@ public class LinkedListTabulatedFunctionTest {
     private final double[] yValues = {0.0, 1.0, 4.0, 9.0, 16.0};
     private TabulatedFunction function = new LinkedListTabulatedFunction(xValues, yValues);
 
-
+    @Test
+    public void testLinkedListTabulatedFunction() {
+        MathFunction mathFunction = new CosineFunction();
+        double startX = 0;
+        double endX = Math.PI;
+        int pointsCount = 5;
+        TabulatedFunction tabulatedFunction = new LinkedListTabulatedFunction(mathFunction, startX, endX, pointsCount);
+        assertEquals(startX, tabulatedFunction.leftBound(), 0.01);
+        assertEquals(endX, tabulatedFunction.rightBound(), 0.01);
+        assertEquals(pointsCount, tabulatedFunction.getCount());
+        assertEquals(3*Math.PI/4, tabulatedFunction.getX(3), 0.01);
+    }
 
     @Test
     public void testGetCount() {
@@ -70,18 +84,12 @@ public class LinkedListTabulatedFunctionTest {
         assertEquals(-1.0, function.apply(-1.0), 0.0001);
     }
 
-    /* @Test
-    public void testInterpolate() {
-        assertEquals(2.5, ((LinkedListTabulatedFunction) function).interpolate(1.5, 1), 0.0001);
-        assertThrows(IllegalArgumentException.class, () -> ((LinkedListTabulatedFunction) function).interpolate(1.5, 4));
-    } */
-
     @Test
     public void testInterpolate() {
-        LinkedListTabulatedFunction.Node floorNode = ((LinkedListTabulatedFunction) function).floorNodeOfX(1.5);
-        assertEquals(2.5, ((LinkedListTabulatedFunction) function).interpolate(1.5, floorNode), 0.0001);
-        assertEquals(4.0, ((LinkedListTabulatedFunction) function).interpolate(2.0, floorNode), 0.0001);
-        assertThrows(IllegalArgumentException.class, () -> ((LinkedListTabulatedFunction) function).interpolate(1.5, null));
+        int floorIndex = ((LinkedListTabulatedFunction) function).floorIndexOfX(1.5);
+        assertEquals(2.5, ((LinkedListTabulatedFunction) function).interpolate(1.5, floorIndex), 0.0001);
+        assertEquals(4.0, ((LinkedListTabulatedFunction) function).interpolate(2.0, floorIndex), 0.0001);
+        assertThrows(IllegalArgumentException.class, () -> ((LinkedListTabulatedFunction) function).interpolate(1.5, -1));
     }
 
     @Test
@@ -115,4 +123,59 @@ public class LinkedListTabulatedFunctionTest {
         assertEquals(4.0, function.getX(2), 0.0001);
         assertEquals(16.0, function.getY(2), 0.0001);
     }
+
+    // Метод toString для узла тестируется через toString для списка, т.к. он там используется
+    @Test
+    public void testToString() {
+        String expected = "(0.0; 0.0), (1.0; 1.0), (2.0; 4.0), (3.0; 9.0), (4.0; 16.0)";
+        assertEquals(expected, function.toString());
+    }
+
+    @Test
+    public void testHashCode() {
+        LinkedListTabulatedFunction.Node node1 = new LinkedListTabulatedFunction.Node(-5.0, 1.0);
+        LinkedListTabulatedFunction.Node node2 = new LinkedListTabulatedFunction.Node(0.05, 7.1);
+        LinkedListTabulatedFunction.Node node3 = new LinkedListTabulatedFunction.Node(-5.0, 1.0);
+
+        assertEquals(node1.hashCode(), node3.hashCode());
+        assertNotEquals(10, node2.hashCode());
+        assertNotEquals(node2.hashCode(), node1.hashCode());
+    }
+
+    @Test
+    public void testEquals() {
+        LinkedListTabulatedFunction.Node node1 = new LinkedListTabulatedFunction.Node(0.00003, -55.9);
+        LinkedListTabulatedFunction.Node node2 = new LinkedListTabulatedFunction.Node(0.00003, -55.9);
+        assertTrue(node1.equals(node2));
+    }
+
+    @Test
+    public void testClone() {
+        LinkedListTabulatedFunction.Node node = new LinkedListTabulatedFunction.Node(-3.4, 33.4);
+        Object copy = node.clone();
+        assertTrue(node.equals(copy));
+    }
+
+    @Test
+    public void testHashCodeLinkedList() {
+        LinkedListTabulatedFunction functionCopy = new LinkedListTabulatedFunction(xValues, yValues);
+
+        assertEquals(function.hashCode(), functionCopy.hashCode());
+        assertNotEquals(10, function.hashCode());
+    }
+
+    @Test
+    public void testEqualsLinkedList() {
+        LinkedListTabulatedFunction functionCopy = new LinkedListTabulatedFunction(xValues, yValues);
+        LinkedListTabulatedFunction functionNotCopy = new LinkedListTabulatedFunction(new double[] {1.5, 2.33, -5.0}, new double[] {-1.5, -2.33, 5.0});
+        assertTrue(function.equals(functionCopy));
+        assertFalse(function.equals(functionNotCopy));
+
+    }
+
+    @Test
+    public void testCloneLinkedList() {
+        assertEquals(function, ((LinkedListTabulatedFunction)function).clone());
+    }
+
 }

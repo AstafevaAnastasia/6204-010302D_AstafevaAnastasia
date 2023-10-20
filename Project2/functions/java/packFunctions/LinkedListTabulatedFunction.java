@@ -1,12 +1,16 @@
 // Класс LinkedListTabulatedFunction реализует интерфейсы TabulatedFunction, Insertable, Removable
 package packFunctions;
-public class LinkedListTabulatedFunction implements TabulatedFunction, Insertable, Removable {
+
+import java.util.Arrays;
+import java.util.Objects;
+
+public class LinkedListTabulatedFunction extends AbstractTabulatedFunction implements Insertable, Removable, Cloneable {
 
     private int count; // количество элементов в списке
     private Node head; // ссылка на первый элемент списка
 
     // Вложенный класс Node описывает узел списка
-    protected class Node {
+    static class Node {
         public double x; // значение аргумента функции
         public double y; // значение функции
         public Node next; // ссылка на следующий элемент списка
@@ -17,6 +21,32 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Insertabl
             this.y = y;
             this.next = null;
             this.prev = null;
+        }
+
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            sb.append("(").append(x).append("; ").append(y).append(")");
+            return sb.toString();
+        }
+        public boolean equals(Object o) {
+            if (this == o) return true; // если переданный объект ссылается на текущий узел, то они равны
+            if (o == null || getClass() != o.getClass()) return false;
+            Node node = (Node) o;
+            // сравниваем координаты и ссылки на следующий и предыдущий узлы
+            return Double.compare(x, node.x) == 0 && Double.compare(y, node.y) == 0 && Objects.equals(next, node.next) && Objects.equals(prev, node.prev);
+        }
+
+        public int hashCode() {
+            int result = 31 * Double.hashCode(x);
+            result = 31 * result + Double.hashCode(y);
+            return result;
+        }
+
+        public Object clone() {
+            Node clone = new Node(x, y);
+            clone.prev = this.prev;
+            clone.next = this.next;
+            return clone;
         }
     }
 
@@ -62,6 +92,21 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Insertabl
         }
     }
 
+    // Вспомогательный метод, чтобы достать координаты узла.
+    public double[][] arrayNode() {
+        double[] xValues = new double[count];
+        double[] yValues = new double[count];
+        int i = 0;
+        for (Node temp = head; temp != head.prev; temp = temp.next) {
+            xValues[i] = temp.x;
+            yValues[i] = temp.y;
+            i++;
+        }
+        xValues[count - 1] = head.prev.x;
+        yValues[count - 1] = head.prev.y;
+        return new double[][]{xValues, yValues};
+    }
+
     // Метод getNode возвращает узел списка по его индексу
     private Node getNode(int index) {
         if (index < 0 || index >= count) { // если индекс выходит за границы списка, выбрасываем исключение
@@ -83,7 +128,6 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Insertabl
     }
 
     // Метод insert вставляет новый узел в список на нужное место
-    @Override
     public void insert(double x, double y) {
         if (head == null) {
             addNode(x, y);
@@ -121,31 +165,26 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Insertabl
     }
 
     // Метод getCount возвращает количество элементов в списке
-    @Override
     public int getCount() {
         return count;
     }
 
     // Метод getX возвращает значение аргумента функции по индексу
-    @Override
     public double getX(int index) {
         return getNode(index).x;
     }
 
     // Метод getY возвращает значение функции по индексу
-    @Override
     public double getY(int index) {
         return getNode(index).y;
     }
 
     // Метод setY изменяет значение функции по индексу
-    @Override
     public void setY(int index, double value) {
         getNode(index).y = value;
     }
 
     // Метод indexOfX возвращает индекс первого узла с заданным значением аргумента или -1, если такого узла нет
-    @Override
     public int indexOfX(double x) {
         for (int i = 0; i < count; i++) {
             if (getX(i) == x) {
@@ -156,7 +195,6 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Insertabl
     }
 
     // Метод indexOfY возвращает индекс первого узла с заданным значением функции или -1, если такого узла нет
-    @Override
     public int indexOfY(double y) {
         for (int i = 0; i < count; i++) {
             if (getY(i) == y) {
@@ -167,67 +205,39 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Insertabl
     }
 
     // Метод leftBound возвращает значение аргумента первого узла списка.
-    @Override
     public double leftBound() {
         return head.x;
     }
 
     // Метод rightBound возвращает значение аргумента последнего узла списка.
-    @Override
     public double rightBound() {
         return head.prev.x;
     }
 
     // Метод apply вычисляет значение функции в точке x методом линейной интерполяции между ближайшими узлами.
-    @Override
     public double apply(double x) {
-        Node floorNode = floorNodeOfX(x);
+        //Node floorNode = floorNodeOfX(x);
         if (x < head.x) { // Если x меньше значения аргумента первого узла списка, то используется метод extrapolateLeft.
             return extrapolateLeft(x);
         } else if (x > head.prev.x) { // Если x больше значения аргумента последнего узла списка, то используется метод extrapolateRight.
             return extrapolateRight(x);
-        } else if (floorNode.x == x) { // Если найден узел списка с аргументом, равным x, то возвращается значение его функции.
-            return floorNode.y;
+        } else if (floorNodeOfX(x).x == x) { // Если найден узел списка с аргументом, равным x, то возвращается значение его функции.
+            return floorNodeOfX(x).y;
         } else { // В остальных случаях вычисляется значение функции методом interpolate между ближайшими узлами.
-            return interpolate(x, floorNode);
+            return interpolate(x, floorIndexOfX(x));
         }
     }
-    /* @Override
-    public double apply(double x) {
-        if (x < leftBound() || x > rightBound()) { // Если аргумент находится за пределами списка, выбрасываем исключение
-            throw new IllegalArgumentException("Argument out of range: " + x);
-        }
-        int i = floorIndexOfX(x);
-        if (i == -1) {
-            return getY(0);
-        } else if (i < getCount() - 1) {
-            double x1 = getX(i);
-            double y1 = getY(i);
-            double x2 = getX(i + 1);
-            double y2 = getY(i + 1);
-            return y1 + (y2 - y1) * (x - x1) / (x2 - x1);
-        } else {
-            return getY(i);
-        }
-    } */
-
-    /* public double interpolate(double x, int floorIndex) {
-        if (floorIndex < 0 || floorIndex >= getCount() - 1) {
-            throw new IllegalArgumentException("Index out of range: " + floorIndex);
-        }
-        double x1 = getX(floorIndex);
-        double y1 = getY(floorIndex);
-        double x2 = getX(floorIndex + 1);
-        double y2 = getY(floorIndex + 1);
-        return y1 + (y2 - y1) * (x - x1) / (x2 - x1);
-    } */
 
     /* Метод interpolate вычисляет значение функции в точке x методом линейной интерполяции между узлами
     с индексами floorNode и floorNode.next, если floorNode не равен null и имеет следующий узел.
     Иначе выбрасывается исключение IllegalArgumentException. */
-    public double interpolate(double x, Node floorNode) {
+    public double interpolate(double x, int floorIndex) {
+        Node floorNode = floorNodeOfX(x);
         if (floorNode == null || floorNode.next == null) {
             throw new IllegalArgumentException("Node is not valid for interpolation");
+        }
+        if (floorIndex < 0 || floorIndex >= getCount() - 1) {
+            throw new IllegalArgumentException("Index out of range: " + floorIndex);
         }
         double x1 = floorNode.x;
         double y1 = floorNode.y;
@@ -296,7 +306,6 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Insertabl
     }
 
     // Метод remove удаляет узел списка с заданным индексом.
-    @Override
     public void remove(int index) {
         if (count == 1) { // Если список содержит только один узел, он удаляется полностью.
             head = null;
@@ -309,5 +318,50 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Insertabl
             }
         }
         count--; // Уменьшаем кол-во элементов
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder(); // создаем объект StringBuilder для построения строки
+        Node current = head;
+        for (int i = 0; i < count; i++) {
+            String node = current.toString();
+            sb.append(node).append(", ");
+            current = current.next;
+        }
+        sb.delete(sb.length() - 2, sb.length()); // удаляем последнюю запятую и пробел
+        return sb.toString();
+    }
+
+    public boolean equals(Object o) {
+        LinkedListTabulatedFunction temp = (LinkedListTabulatedFunction) o;
+        double[][] array1 = temp.arrayNode(); // получаем двумерный массив координат узлов из переданного объекта
+        double[][] array2 = this.arrayNode(); // получаем двумерный массив координат узлов из текущего объекта
+
+        if (o.getClass() == this.getClass() && Arrays.deepEquals(array1, array2)) return true;
+        else return false;
+    }
+
+    public int hashCode() {
+        int result = 0; // инициализируем переменную результатом
+        for (Node temp = head; temp != head.prev; temp = temp.next) {
+
+            result = result * 31 + temp.hashCode();
+        }
+        result = result * 31 + head.prev.hashCode(); // вычисляем хеш-код для последнего узла и добавляем его к результату
+        return result;
+    }
+
+    public Object clone() {
+        double[] xValues = new double[count];
+        double[] yValues = new double[count];
+        int i = 0;
+        for (Node temp = head; temp != head.prev; temp = temp.next) {
+            xValues[i] = temp.x;
+            yValues[i] = temp.y;
+            i++;
+        }
+        xValues[count - 1] = head.prev.x; // добавляем координату x последнего узла в массив
+        yValues[count - 1] = head.prev.y; // добавляем координату y последнего узла в массив
+        return new LinkedListTabulatedFunction(xValues, yValues);
     }
 }

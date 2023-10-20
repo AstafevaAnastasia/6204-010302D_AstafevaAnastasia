@@ -60,11 +60,11 @@ public class CompositeFunctionTest {
     @Test
     public void testInterpolate() {
         // Тесты для списка
-        LinkedListTabulatedFunction.Node floorNode1 = ((LinkedListTabulatedFunction) testFunction1).floorNodeOfX(1.0);
-        LinkedListTabulatedFunction.Node floorNode2 = ((LinkedListTabulatedFunction) testFunction2).floorNodeOfX(1.0);
-        assertEquals(0.540302, ((LinkedListTabulatedFunction) testFunction1).interpolate(1.0, floorNode1), 0.1);
-        assertEquals(-0.416147, ((LinkedListTabulatedFunction) testFunction2).interpolate(1.0, floorNode2), 0.1);
-        assertThrows(IllegalArgumentException.class, () -> ((LinkedListTabulatedFunction) testFunction1).interpolate(1.5, null));
+        int floorIndex1 = ((LinkedListTabulatedFunction) testFunction1).floorIndexOfX(1.0);
+        int floorIndex2 = ((LinkedListTabulatedFunction) testFunction2).floorIndexOfX(1.0);
+        assertEquals(0.540302, ((LinkedListTabulatedFunction) testFunction1).interpolate(1.0, floorIndex1), 0.1);
+        assertEquals(-0.416147, ((LinkedListTabulatedFunction) testFunction2).interpolate(1.0, floorIndex2), 0.1);
+        assertThrows(IllegalArgumentException.class, () -> ((LinkedListTabulatedFunction) testFunction1).interpolate(1.5, -1));
         //для массива
         assertEquals(0.540302, ((ArrayTabulatedFunction) testFunction3).interpolate(1.0, ((ArrayTabulatedFunction) testFunction3).floorIndexOfX(1.0)), 0.1);
         assertEquals(-0.416147, ((ArrayTabulatedFunction) testFunction4).interpolate(1.0, ((ArrayTabulatedFunction) testFunction4).floorIndexOfX(1.0)), 0.1);
