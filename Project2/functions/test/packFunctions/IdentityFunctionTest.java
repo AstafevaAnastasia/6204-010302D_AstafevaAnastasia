@@ -1,5 +1,6 @@
 package packFunctions;
 
+
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -38,7 +39,7 @@ public class IdentityFunctionTest {
     @Test
     public void testClone() throws CloneNotSupportedException {
         IdentityFunction f = new IdentityFunction();
-        IdentityFunction f2 = (IdentityFunction) f.clone();
+        IdentityFunction f2 = f.clone();
         assertEquals(f, f2);
     }
 }
