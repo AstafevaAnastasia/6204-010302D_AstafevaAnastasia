@@ -28,12 +28,12 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
             sb.append("(").append(x).append("; ").append(y).append(")");
             return sb.toString();
         }
+
         public boolean equals(Object o) {
-            if (this == o) return true; // если переданный объект ссылается на текущий узел, то они равны
-            if (o == null || getClass() != o.getClass()) return false;
-            Node node = (Node) o;
-            // сравниваем координаты и ссылки на следующий и предыдущий узлы
-            return Double.compare(x, node.x) == 0 && Double.compare(y, node.y) == 0 && Objects.equals(next, node.next) && Objects.equals(prev, node.prev);
+            if (this == o) return true;  // Если это тот же самый объект, то они равны
+            return ((o != null) && (o.getClass() == this.getClass())
+                    && (x == ((LinkedListTabulatedFunction.Node)o).x)
+                    && (y == ((LinkedListTabulatedFunction.Node)o).y));
         }
 
         public int hashCode() {
@@ -90,21 +90,6 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
             double x = xFrom + i * step;
             addNode(x, source.apply(x));
         }
-    }
-
-    // Вспомогательный метод, чтобы достать координаты узла.
-    public double[][] arrayNode() {
-        double[] xValues = new double[count];
-        double[] yValues = new double[count];
-        int i = 0;
-        for (Node temp = head; temp != head.prev; temp = temp.next) {
-            xValues[i] = temp.x;
-            yValues[i] = temp.y;
-            i++;
-        }
-        xValues[count - 1] = head.prev.x;
-        yValues[count - 1] = head.prev.y;
-        return new double[][]{xValues, yValues};
     }
 
     // Метод getNode возвращает узел списка по его индексу
@@ -333,12 +318,19 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
     }
 
     public boolean equals(Object o) {
-        LinkedListTabulatedFunction temp = (LinkedListTabulatedFunction) o;
-        double[][] array1 = temp.arrayNode(); // получаем двумерный массив координат узлов из переданного объекта
-        double[][] array2 = this.arrayNode(); // получаем двумерный массив координат узлов из текущего объекта
-
-        if (o.getClass() == this.getClass() && Arrays.deepEquals(array1, array2)) return true;
-        else return false;
+        if (this == o) return true;
+        Node node = head;  // Получаем первый узел списка
+        if (o.getClass() == o.getClass() && count == ((LinkedListTabulatedFunction)o).getCount()) {
+            Node othernode = ((LinkedListTabulatedFunction)o).getNode(0); // Получаем первый узел другого списка
+            // Сравниваем каждый узел текущего списка с соответствующим узлом другого списка
+            do {
+                if (!node.equals(othernode)) return false;
+                node = node.next;
+                othernode = othernode.next;
+            } while (node != head);
+            return true;
+        }
+        return false;
     }
 
     public int hashCode() {
