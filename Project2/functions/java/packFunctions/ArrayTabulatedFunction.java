@@ -19,7 +19,6 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
         return mass;
     }
 
-    @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
@@ -27,7 +26,6 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
         return Arrays.equals(xValues, that.xValues) && Arrays.equals(yValues, that.yValues);
     }
 
-    @Override
     public int hashCode() {
         int result = Objects.hash(count);
         result = 31 * result + Arrays.hashCode(xValues);
@@ -35,7 +33,6 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
         return result;
     }
 
-    @Override
     public ArrayTabulatedFunction clone() throws CloneNotSupportedException {
         double[] clonedXValues = Arrays.copyOf(this.xValues, this.xValues.length);
         double[] clonedYValues = Arrays.copyOf(this.yValues, this.yValues.length);
