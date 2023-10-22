@@ -14,6 +14,18 @@ public class ArrayTabulatedFunctionTest {
         Assert.assertEquals(1.0, function.getX(0), 0.0);
         Assert.assertEquals(4.0, function.getY(0), 0.0);
     }
+    @Test
+    public void testSecondConstructor() {
+        MathFunction f = new ConstantFunction(5);
+        int startX = 0, endX = 2;
+        int count = 3;
+        ArrayTabulatedFunction f2 = new ArrayTabulatedFunction(f, startX, endX, count);
+        Assert.assertEquals(startX, f2.leftBound(), 0.01);
+        Assert.assertEquals(endX, f2.rightBound(), 0.01);
+        Assert.assertEquals(count, f2.getCount());
+
+    }
+
 
     @Test
     public void testGetX() {
