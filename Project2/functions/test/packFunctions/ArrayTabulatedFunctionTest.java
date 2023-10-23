@@ -26,7 +26,18 @@ public class ArrayTabulatedFunctionTest {
 
     }
 
-
+    @Test
+    public void testEqualsTF() {
+        ArrayTabulatedFunction function = createFunction();
+        double[] xValues = {1.0, 2.0, 3.0};
+        double[] yValues = {4.0, 5.0, 6.0};
+        double[] xV = {1.0, 2.0, 7.5};
+        double[] yV = {4.0, 5.0, 6.0};
+        LinkedListTabulatedFunction f = new LinkedListTabulatedFunction(xValues, yValues);
+        LinkedListTabulatedFunction f2 = new LinkedListTabulatedFunction(xV, yV);
+        Assert.assertTrue(function.equalsTF(f));
+        Assert.assertFalse(function.equalsTF(f2));
+    }
     @Test
     public void testGetX() {
         // Assuming the function is already created
