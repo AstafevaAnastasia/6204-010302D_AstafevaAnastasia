@@ -170,7 +170,7 @@ public class LinkedListTabulatedFunctionTest {
         LinkedListTabulatedFunction functionNotCopy = new LinkedListTabulatedFunction(new double[] {1.5, 2.33, -5.0}, new double[] {-1.5, -2.33, 5.0});
         assertTrue(function.equals(functionCopy));
         assertFalse(function.equals(functionNotCopy));
-
+        assertFalse(function.equals(null));
     }
 
     @Test

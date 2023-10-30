@@ -318,6 +318,7 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
     }
 
     public boolean equals(Object o) {
+        if (o == null) return false;
         if (this == o) return true;
         Node node = head;  // Получаем первый узел списка
         if (o.getClass() == o.getClass() && count == ((LinkedListTabulatedFunction)o).getCount()) {
