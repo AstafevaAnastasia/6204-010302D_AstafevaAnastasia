@@ -27,6 +27,7 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
     }
 
     public boolean equalsTF(Object obj) {
+        if (obj == null) return false;
         if (this == obj) {
             return true;
         }
@@ -79,6 +80,9 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
             xFrom = xTo;
             xTo = temp;
         }
+        if (count < 2) {  // если количество точек меньше 2, выбрасываем исключение
+            throw new IllegalArgumentException("count < 2");
+        }
         this.count = count;
         this.xValues = new double[count];
         this.yValues = new double[count];
@@ -91,6 +95,9 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
     }
 
     public void remove(int index){
+        if (index < 0 || index >= count) {
+            throw new IllegalArgumentException("Index is out of bounds");
+        }
         for (int i = index + 1; i < xValues.length; i++) {
             xValues[i - 1] = xValues[i];
             yValues[i - 1] = yValues[i];
@@ -200,10 +207,10 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
     protected int floorIndexOfX(double x) {
         for (int i = 0; i < count - 1; ++i) { // начинам искать тогда x, если ни одно из предыдущих условий не выполнено
             if (x < xValues[0]) { // если x меньше первого элемента
-                return 0; // то так как массив упорядочен => x меньше всех элементов массива => возвращаем 0
+                throw new IllegalArgumentException("Index is out of left bound"); // то так как массив упорядочен => x меньше всех элементов массива => возвращаем 0
             }
             if (x == xValues[i]) { // если мы нашли x,
-                return i; // то возвращаем его индес
+                return i; // то возвращаем его индекс
             }
             if (x > xValues[i] && x < xValues[i + 1]) { //если мы находим такой промежуток, в котором x больше предыдущего, но меньше следующего
                 return i; // то возвращаем индекс предыдущего

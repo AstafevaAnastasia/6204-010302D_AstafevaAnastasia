@@ -124,6 +124,7 @@ public class LinkedListTabulatedFunctionTest {
         assertEquals(1.0, function.getX(0), 0.0001);
         assertEquals(1.0, function.getY(0), 0.0001);
         ((LinkedListTabulatedFunction) function).remove(2);
+        assertThrows(IllegalArgumentException.class, () -> ((LinkedListTabulatedFunction) function).remove(-1));
         assertEquals(3, function.getCount());
         assertEquals(4.0, function.getX(2), 0.0001);
         assertEquals(16.0, function.getY(2), 0.0001);

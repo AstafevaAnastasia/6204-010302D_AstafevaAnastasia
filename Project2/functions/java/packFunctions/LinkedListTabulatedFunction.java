@@ -296,8 +296,8 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
 
     // Метод remove удаляет узел списка с заданным индексом.
     public void remove(int index) {
-        if (count == 1) { // Если список содержит только один узел, он удаляется полностью.
-            head = null;
+        if (index < 0 || index >= count) {
+            throw new IllegalArgumentException("Index is out of bounds");
         } else {
             Node node = getNode(index); // Получаем узел с заданным индексом.
             node.prev.next = node.next; // Смещаем соседние узлы
