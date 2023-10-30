@@ -69,6 +69,8 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
 
     // Конструктор принимает два массива значений аргумента и функции и заполняет ими список
     public LinkedListTabulatedFunction(double[] xValues, double[] yValues) {
+        if (xValues.length < 2 || yValues.length < 2)
+            throw new IllegalArgumentException("count < 2");
         for (int i = 0; i < xValues.length; i++) {
             addNode(xValues[i], yValues[i]);
         }
@@ -156,16 +158,25 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
 
     // Метод getX возвращает значение аргумента функции по индексу
     public double getX(int index) {
+        if (index < 0 || index >= count) {
+            throw new IllegalArgumentException("Index is out of bounds");
+        }
         return getNode(index).x;
     }
 
     // Метод getY возвращает значение функции по индексу
     public double getY(int index) {
+        if (index < 0 || index >= count) {
+            throw new IllegalArgumentException("Index is out of bounds");
+        }
         return getNode(index).y;
     }
 
     // Метод setY изменяет значение функции по индексу
     public void setY(int index, double value) {
+        if (index < 0 || index >= count) {
+            throw new IllegalArgumentException("Index is out of bounds");
+        }
         getNode(index).y = value;
     }
 
@@ -214,16 +225,9 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
     }
 
     /* Метод interpolate вычисляет значение функции в точке x методом линейной интерполяции между узлами
-    с индексами floorNode и floorNode.next, если floorNode не равен null и имеет следующий узел.
-    Иначе выбрасывается исключение IllegalArgumentException. */
+    с индексами floorNode и floorNode.next */
     public double interpolate(double x, int floorIndex) {
         Node floorNode = floorNodeOfX(x);
-        if (floorNode == null || floorNode.next == null) {
-            throw new IllegalArgumentException("Node is not valid for interpolation");
-        }
-        if (floorIndex < 0 || floorIndex >= getCount() - 1) {
-            throw new IllegalArgumentException("Index out of range: " + floorIndex);
-        }
         double x1 = floorNode.x;
         double y1 = floorNode.y;
         double x2 = floorNode.next.x;
@@ -258,7 +262,7 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
     // Метод floorIndexOfX возвращает индекс узла списка с максимальным значением аргумента, которое не превышает x.
     public int floorIndexOfX(double x) {
         if (x < leftBound()) {
-            return -1;
+            throw new IllegalArgumentException("Index is out of left bound");
         }
         if (x > rightBound()) {
             return getCount() - 2;

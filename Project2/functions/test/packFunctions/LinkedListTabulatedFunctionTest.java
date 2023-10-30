@@ -38,6 +38,8 @@ public class LinkedListTabulatedFunctionTest {
         assertEquals(2.0, function.getX(2), 0.0001);
         assertEquals(3.0, function.getX(3), 0.0001);
         assertEquals(4.0, function.getX(4), 0.0001);
+        assertThrows(IllegalArgumentException.class, () -> function.getX(-1));
+        assertThrows(IllegalArgumentException.class, () -> function.getX(10));
     }
 
     @Test
@@ -47,12 +49,16 @@ public class LinkedListTabulatedFunctionTest {
         assertEquals(4.0, function.getY(2), 0.0001);
         assertEquals(9.0, function.getY(3), 0.0001);
         assertEquals(16.0, function.getY(4), 0.0001);
+        assertThrows(IllegalArgumentException.class, () -> function.getY(-1));
+        assertThrows(IllegalArgumentException.class, () -> function.getY(10));
     }
 
     @Test
     public void testSetY() {
         function.setY(2, 5.0);
         assertEquals(5.0, function.getY(2), 0.0001);
+        assertThrows(IllegalArgumentException.class, () -> function.setY(-1, 5.0));
+        assertThrows(IllegalArgumentException.class, () -> function.setY(10, 5.0));
     }
 
     @Test
@@ -89,7 +95,6 @@ public class LinkedListTabulatedFunctionTest {
         int floorIndex = ((LinkedListTabulatedFunction) function).floorIndexOfX(1.5);
         assertEquals(2.5, ((LinkedListTabulatedFunction) function).interpolate(1.5, floorIndex), 0.0001);
         assertEquals(4.0, ((LinkedListTabulatedFunction) function).interpolate(2.0, floorIndex), 0.0001);
-        assertThrows(IllegalArgumentException.class, () -> ((LinkedListTabulatedFunction) function).interpolate(1.5, -1));
     }
 
     @Test
@@ -107,7 +112,7 @@ public class LinkedListTabulatedFunctionTest {
     @Test
     public void testFloorIndexOfX() {
         assertEquals(1, ((LinkedListTabulatedFunction) function).floorIndexOfX(1.5), 0.0001);
-        assertEquals(-1, ((LinkedListTabulatedFunction) function).floorIndexOfX(-1.0), 0.0001);
+        assertThrows(IllegalArgumentException.class, () -> ((LinkedListTabulatedFunction) function).floorIndexOfX(-1.0));
         assertEquals(3, ((LinkedListTabulatedFunction) function).floorIndexOfX(3.5), 0.0001);
         assertEquals(3, ((LinkedListTabulatedFunction) function).floorIndexOfX(4.0), 0.0001);
     }
