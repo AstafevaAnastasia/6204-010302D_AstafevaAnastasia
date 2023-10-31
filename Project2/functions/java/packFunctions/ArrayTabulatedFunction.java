@@ -1,6 +1,12 @@
 package packFunctions;
+import exceptions.ArrayIsNotSortedException;
+import exceptions.DifferentLengthOfArraysException;
+import exceptions.InterpolationException;
+
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Objects;
+import java.util.stream.IntStream;
 
 
 // класс табулированных функций, значения которых хранятся в массиве
@@ -11,12 +17,12 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
     private int count; // приватное поле количества элементов
 
     public String toString() {
-        String mass = "";
+        StringBuilder mass = new StringBuilder();
         int i = 0;
         while (i < count) {
-            mass += "[ " + xValues[i] + ", " + yValues[i++] + " ] ";
+            mass.append("[ ").append(xValues[i]).append(", ").append(yValues[i++]).append(" ] ");
         }
-        return mass;
+        return mass.toString();
     }
 
     public boolean equals(Object obj) {
@@ -64,12 +70,17 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
 
     // конструктор
     public ArrayTabulatedFunction(double[] xValues, double[] yValues) {
-        if (xValues.length != yValues.length) { // ну просто обработка исключений
-            throw new IllegalArgumentException("The length of xValues and yValues must be the same");
+        if (xValues.length != yValues.length ) {
+            throw new DifferentLengthOfArraysException("Arrays have different length");
         }
-        this.xValues = Arrays.copyOf(xValues, xValues.length); // делаем копию массива с иксами
-        this.yValues = Arrays.copyOf(yValues, yValues.length); // делаем копию массива с игреками
-        this.count = xValues.length; // ну и значение count тоже устанавливаем
+        if (!IntStream.range(0, xValues.length - 1).noneMatch(i -> xValues[i] > xValues[i + 1]) | !IntStream.range(0, yValues.length - 1).noneMatch(i -> yValues[i] > yValues[i + 1])) {
+            throw new ArrayIsNotSortedException("Array(s) is(are) not sorted");
+        }
+        else {
+            this.xValues = Arrays.copyOf(xValues, xValues.length); // делаем копию массива с иксами
+            this.yValues = Arrays.copyOf(yValues, yValues.length); // делаем копию массива с игреками
+            this.count = xValues.length; // ну и значение count тоже устанавливае
+        }
     }
 
     // еще один конструктор
@@ -178,6 +189,10 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
         return xValues[count - 1];
     } //правая граница
 
+    @Override
+    public Iterator<Point> iterator() {
+        throw new UnsupportedOperationException("Iterator is not supported for ArrayTabulatedFunction");
+    }
 
     public double interpolate(double x, int floorIndex) {
         if (floorIndex < 0 || floorIndex >= count - 1) {
@@ -187,7 +202,9 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
         double x1 = xValues[floorIndex + 1];
         double y0 = yValues[floorIndex];
         double y1 = yValues[floorIndex + 1];
-
+        if (x < x0 | x > x1) {
+            throw new InterpolationException("x not in range of interpolate interval");
+        }
         return y0 + (y1 - y0) * (x - x0) / (x1 - x0);
     }
 
