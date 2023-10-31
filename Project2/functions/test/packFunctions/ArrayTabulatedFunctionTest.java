@@ -6,6 +6,8 @@ import exceptions.InterpolationException;
 import org.junit.Assert;
 import org.junit.Test;
 
+import static org.junit.Assert.assertThrows;
+
 public class ArrayTabulatedFunctionTest {
 
     @Test
@@ -66,12 +68,15 @@ public class ArrayTabulatedFunctionTest {
         LinkedListTabulatedFunction f2 = new LinkedListTabulatedFunction(xV, yV);
         Assert.assertTrue(function.equalsTF(f));
         Assert.assertFalse(function.equalsTF(f2));
+        Assert.assertFalse(function.equalsTF(null));
     }
     @Test
     public void testGetX() {
         // Assuming the function is already created
         ArrayTabulatedFunction function = createFunction();
         Assert.assertEquals(2.0, function.getX(1), 0.0);
+        assertThrows(IllegalArgumentException.class, () -> function.getX(-1));
+        assertThrows(IllegalArgumentException.class, () -> function.getX(10));
     }
 
     @Test
@@ -79,6 +84,8 @@ public class ArrayTabulatedFunctionTest {
         // Assuming the function is already created
         ArrayTabulatedFunction function = createFunction();
         Assert.assertEquals(5.0, function.getY(1), 0.0);
+        assertThrows(IllegalArgumentException.class, () -> function.getY(-1));
+        assertThrows(IllegalArgumentException.class, () -> function.getY(10));
     }
 
     @Test
@@ -87,6 +94,8 @@ public class ArrayTabulatedFunctionTest {
         ArrayTabulatedFunction function = createFunction();
         function.setY(1, 10.0);
         Assert.assertEquals(10.0, function.getY(1), 0.0);
+        assertThrows(IllegalArgumentException.class, () -> function.setY(-1, 5.0));
+        assertThrows(IllegalArgumentException.class, () -> function.setY(10, 5.0));
     }
 
     @Test
@@ -129,6 +138,7 @@ public class ArrayTabulatedFunctionTest {
         // Assuming the function is already created
         ArrayTabulatedFunction function = createFunction();
         Assert.assertEquals(1, function.floorIndexOfX(2.5));
+        assertThrows(IllegalArgumentException.class, () -> function.floorIndexOfX(0));
     }
 
     @Test

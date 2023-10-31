@@ -1,13 +1,8 @@
 // Класс LinkedListTabulatedFunction реализует интерфейсы TabulatedFunction, Insertable, Removable
 package packFunctions;
 
-import exceptions.ArrayIsNotSortedException;
-import exceptions.DifferentLengthOfArraysException;
-import exceptions.InterpolationException;
-
-import java.util.Iterator;
-import java.util.stream.IntStream;
-import java.util.Iterator;
+import java.util.Arrays;
+import java.util.Objects;
 
 public class LinkedListTabulatedFunction extends AbstractTabulatedFunction implements Insertable, Removable, Cloneable {
 
@@ -71,19 +66,11 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
         }
         count++; // увеличиваем количество элементов в списке на 1
     }
-    @Override
-    public Iterator<Point> iterator() {
-        throw new UnsupportedOperationException("Iterator is not supported for ArrayTabulatedFunction");
-    }
 
     // Конструктор принимает два массива значений аргумента и функции и заполняет ими список
     public LinkedListTabulatedFunction(double[] xValues, double[] yValues) {
-        if (xValues.length != yValues.length ) {
-            throw new DifferentLengthOfArraysException("Arrays have different length");
-        }
-        if (!IntStream.range(0, xValues.length - 1).noneMatch(i -> xValues[i] > xValues[i + 1]) | !IntStream.range(0, yValues.length - 1).noneMatch(i -> yValues[i] > yValues[i + 1])) {
-            throw new ArrayIsNotSortedException("Array(s) is(are) not sorted");
-        }
+        if (xValues.length < 2 || yValues.length < 2)
+            throw new IllegalArgumentException("count < 2");
         for (int i = 0; i < xValues.length; i++) {
             addNode(xValues[i], yValues[i]);
         }
@@ -171,16 +158,25 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
 
     // Метод getX возвращает значение аргумента функции по индексу
     public double getX(int index) {
+        if (index < 0 || index >= count) {
+            throw new IllegalArgumentException("Index is out of bounds");
+        }
         return getNode(index).x;
     }
 
     // Метод getY возвращает значение функции по индексу
     public double getY(int index) {
+        if (index < 0 || index >= count) {
+            throw new IllegalArgumentException("Index is out of bounds");
+        }
         return getNode(index).y;
     }
 
     // Метод setY изменяет значение функции по индексу
     public void setY(int index, double value) {
+        if (index < 0 || index >= count) {
+            throw new IllegalArgumentException("Index is out of bounds");
+        }
         getNode(index).y = value;
     }
 
@@ -229,32 +225,13 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
     }
 
     /* Метод interpolate вычисляет значение функции в точке x методом линейной интерполяции между узлами
-    с индексами floorNode и floorNode.next, если floorNode не равен null и имеет следующий узел.
-    Иначе выбрасывается исключение IllegalArgumentException. */
+    с индексами floorNode и floorNode.next */
     public double interpolate(double x, int floorIndex) {
         Node floorNode = floorNodeOfX(x);
-        if (floorIndex < 0 || floorIndex >= getCount() - 1) {
-            throw new IllegalArgumentException("Index out of range: " + floorIndex);
-        }
-        Node node = head;
-        int i = floorIndex;
-        while (i-1 >= 0) {
-            node = node.next;
-            --i;
-        }
-        if (x < node.x || x > node.next.x) {
-            throw new InterpolationException("x not range in interpolate interval");
-        }
-        if (floorNode == null || floorNode.next == null) {
-            throw new IllegalArgumentException("Node is not valid for interpolation");
-        }
         double x1 = floorNode.x;
         double y1 = floorNode.y;
         double x2 = floorNode.next.x;
         double y2 = floorNode.next.y;
-        if (x < x1 || x > x2) {
-            throw new InterpolationException("x not range in interpolate interval");
-        }
         return y1 + (y2 - y1) * (x - x1) / (x2 - x1);
     }
 
@@ -285,7 +262,7 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
     // Метод floorIndexOfX возвращает индекс узла списка с максимальным значением аргумента, которое не превышает x.
     public int floorIndexOfX(double x) {
         if (x < leftBound()) {
-            return -1;
+            throw new IllegalArgumentException("Index is out of left bound");
         }
         if (x > rightBound()) {
             return getCount() - 2;
@@ -319,8 +296,8 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
 
     // Метод remove удаляет узел списка с заданным индексом.
     public void remove(int index) {
-        if (count == 1) { // Если список содержит только один узел, он удаляется полностью.
-            head = null;
+        if (index < 0 || index >= count) {
+            throw new IllegalArgumentException("Index is out of bounds");
         } else {
             Node node = getNode(index); // Получаем узел с заданным индексом.
             node.prev.next = node.next; // Смещаем соседние узлы
@@ -345,6 +322,7 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
     }
 
     public boolean equals(Object o) {
+        if (o == null) return false;
         if (this == o) return true;
         Node node = head;  // Получаем первый узел списка
         if (o.getClass() == o.getClass() && count == ((LinkedListTabulatedFunction)o).getCount()) {
