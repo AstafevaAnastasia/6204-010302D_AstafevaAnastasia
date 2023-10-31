@@ -1,5 +1,9 @@
 package packFunctions;
 
+import exceptions.ArrayIsNotSortedException;
+import exceptions.DifferentLengthOfArraysException;
+import exceptions.InterpolationException;
+import org.junit.Assert;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -167,7 +171,7 @@ public class LinkedListTabulatedFunctionTest {
     @Test
     public void testEqualsLinkedList() {
         LinkedListTabulatedFunction functionCopy = new LinkedListTabulatedFunction(xValues, yValues);
-        LinkedListTabulatedFunction functionNotCopy = new LinkedListTabulatedFunction(new double[] {1.5, 2.33, -5.0}, new double[] {-1.5, -2.33, 5.0});
+        LinkedListTabulatedFunction functionNotCopy = new LinkedListTabulatedFunction(new double[] {-5.0, 1.5, 2.33}, new double[] {-2.33, -1.5, 5.0});
         assertTrue(function.equals(functionCopy));
         assertFalse(function.equals(functionNotCopy));
 
@@ -178,4 +182,31 @@ public class LinkedListTabulatedFunctionTest {
         assertEquals(function, ((LinkedListTabulatedFunction)function).clone());
     }
 
+    @Test
+    public void tesCheckIsSortedexception() {
+        double[] xValues = {1.0, 2.5, 0.5};
+        double[] yValues = {1.0, 2.0, 3.0};
+        Assert.assertThrows(ArrayIsNotSortedException.class, () -> new LinkedListTabulatedFunction(xValues, yValues));
+    }
+    @Test
+    public void testDifferentArrayLengthsException() {
+        double[] xValues = {1.0, 2.0, 3.0};
+        double[] yValues = {4.0, 5.0, 6.0, 7.0};
+
+        Assert.assertThrows(DifferentLengthOfArraysException.class, () -> new LinkedListTabulatedFunction(xValues, yValues));
+    }
+
+    @Test
+    public void testInterpolateOutsideInterval() {
+        double[] xValues = {1.0, 2.0, 3.0, 4.0};
+        double[] yValues = {4.0, 5.0, 6.0, 7.0};
+
+        LinkedListTabulatedFunction function = new LinkedListTabulatedFunction(xValues, yValues);
+        assertThrows(InterpolationException.class, () -> {
+            function.interpolate(-1, 1);
+        });
+        assertThrows(InterpolationException.class, () -> {
+            function.interpolate(3.5, 1);
+        });
+    }
 }

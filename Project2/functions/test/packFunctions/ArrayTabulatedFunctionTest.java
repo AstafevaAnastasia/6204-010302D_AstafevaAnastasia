@@ -1,5 +1,8 @@
 package packFunctions;
 
+import exceptions.ArrayIsNotSortedException;
+import exceptions.DifferentLengthOfArraysException;
+import exceptions.InterpolationException;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -14,6 +17,32 @@ public class ArrayTabulatedFunctionTest {
         Assert.assertEquals(1.0, function.getX(0), 0.0);
         Assert.assertEquals(4.0, function.getY(0), 0.0);
     }
+
+    @Test
+    public void tesCheckIsSortedexception() {
+        double[] xValues = {1.0, 2.5, 0.5};
+        double[] yValues = {1.0, 2.0, 3.0};
+        Assert.assertThrows(ArrayIsNotSortedException.class, () -> new ArrayTabulatedFunction(xValues, yValues));
+    }
+    @Test
+    public void testDifferentArrayLengthsException() {
+        double[] xValues = {1.0, 2.0, 3.0};
+        double[] yValues = {4.0, 5.0, 6.0, 7.0};
+
+        Assert.assertThrows(DifferentLengthOfArraysException.class, () -> new ArrayTabulatedFunction(xValues, yValues));
+    }
+
+    @Test
+    public void testInterpolateOutsideInterval() {
+        double[] xValues = {1.0, 2.0, 3.0};
+        double[] yValues = {4.0, 5.0, 6.0};
+
+        ArrayTabulatedFunction function = new ArrayTabulatedFunction(xValues, yValues);
+
+        Assert.assertThrows(InterpolationException.class, () -> function.interpolate(0.5, 1));
+        Assert.assertThrows(InterpolationException.class, () -> function.interpolate(3.5, 0));
+    }
+
     @Test
     public void testSecondConstructor() {
         MathFunction f = new ConstantFunction(5);
@@ -92,7 +121,7 @@ public class ArrayTabulatedFunctionTest {
     public void testInterpolate() {
         // Assuming the function is already created
         ArrayTabulatedFunction function = createFunction();
-        Assert.assertEquals(4.5, function.interpolate(1.5, 1), 0.0);
+        Assert.assertEquals(4.5, function.interpolate(1.5, 0), 0.0);
     }
 
     @Test

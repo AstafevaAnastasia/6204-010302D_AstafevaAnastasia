@@ -1,8 +1,12 @@
 // Класс LinkedListTabulatedFunction реализует интерфейсы TabulatedFunction, Insertable, Removable
 package packFunctions;
 
-import java.util.Arrays;
-import java.util.Objects;
+import exceptions.ArrayIsNotSortedException;
+import exceptions.DifferentLengthOfArraysException;
+import exceptions.InterpolationException;
+
+import java.util.Iterator;
+import java.util.stream.IntStream;
 
 public class LinkedListTabulatedFunction extends AbstractTabulatedFunction implements Insertable, Removable, Cloneable {
 
@@ -69,6 +73,12 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
 
     // Конструктор принимает два массива значений аргумента и функции и заполняет ими список
     public LinkedListTabulatedFunction(double[] xValues, double[] yValues) {
+        if (xValues.length != yValues.length ) {
+            throw new DifferentLengthOfArraysException("Arrays have different length");
+        }
+        if (!IntStream.range(0, xValues.length - 1).noneMatch(i -> xValues[i] > xValues[i + 1]) | !IntStream.range(0, yValues.length - 1).noneMatch(i -> yValues[i] > yValues[i + 1])) {
+            throw new ArrayIsNotSortedException("Array(s) is(are) not sorted");
+        }
         for (int i = 0; i < xValues.length; i++) {
             addNode(xValues[i], yValues[i]);
         }
@@ -218,17 +228,34 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
     Иначе выбрасывается исключение IllegalArgumentException. */
     public double interpolate(double x, int floorIndex) {
         Node floorNode = floorNodeOfX(x);
-        if (floorNode == null || floorNode.next == null) {
-            throw new IllegalArgumentException("Node is not valid for interpolation");
-        }
         if (floorIndex < 0 || floorIndex >= getCount() - 1) {
             throw new IllegalArgumentException("Index out of range: " + floorIndex);
+        }
+        Node node = head;
+        int i = floorIndex;
+        while (i-1 >= 0) {
+            node = node.next;
+            --i;
+        }
+        if (x < node.x || x > node.next.x) {
+            throw new InterpolationException("x not range in interpolate interval");
+        }
+        if (floorNode == null || floorNode.next == null) {
+            throw new IllegalArgumentException("Node is not valid for interpolation");
         }
         double x1 = floorNode.x;
         double y1 = floorNode.y;
         double x2 = floorNode.next.x;
         double y2 = floorNode.next.y;
+        if (x < x1 || x > x2) {
+            throw new InterpolationException("x not range in interpolate interval");
+        }
         return y1 + (y2 - y1) * (x - x1) / (x2 - x1);
+    }
+
+    @Override
+    public Iterator<Point> iterator() {
+        throw new UnsupportedOperationException("Iterator is not supported for ArrayTabulatedFunction");
     }
 
     // Метод extrapolateLeft вычисляет значение функции в точке x методом экстраполяции слева на основе первых двух узлов.
