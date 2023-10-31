@@ -7,6 +7,7 @@ import exceptions.InterpolationException;
 
 import java.util.Iterator;
 import java.util.stream.IntStream;
+import java.util.Iterator;
 
 public class LinkedListTabulatedFunction extends AbstractTabulatedFunction implements Insertable, Removable, Cloneable {
 
@@ -69,6 +70,10 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
             head.prev = node;
         }
         count++; // увеличиваем количество элементов в списке на 1
+    }
+    @Override
+    public Iterator<Point> iterator() {
+        throw new UnsupportedOperationException("Iterator is not supported for ArrayTabulatedFunction");
     }
 
     // Конструктор принимает два массива значений аргумента и функции и заполняет ими список
@@ -251,11 +256,6 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
             throw new InterpolationException("x not range in interpolate interval");
         }
         return y1 + (y2 - y1) * (x - x1) / (x2 - x1);
-    }
-
-    @Override
-    public Iterator<Point> iterator() {
-        throw new UnsupportedOperationException("Iterator is not supported for ArrayTabulatedFunction");
     }
 
     // Метод extrapolateLeft вычисляет значение функции в точке x методом экстраполяции слева на основе первых двух узлов.
