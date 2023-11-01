@@ -6,9 +6,13 @@ import exceptions.InterpolationException;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Iterator;
+
 import static org.junit.Assert.assertThrows;
 
 public class ArrayTabulatedFunctionTest {
+
+    private Point[] ArrayTabulatedFunction;
 
     @Test
     public void testConstructorWithArrays() {
@@ -26,6 +30,7 @@ public class ArrayTabulatedFunctionTest {
         double[] yValues = {1.0, 2.0, 3.0};
         Assert.assertThrows(ArrayIsNotSortedException.class, () -> new ArrayTabulatedFunction(xValues, yValues));
     }
+
     @Test
     public void testDifferentArrayLengthsException() {
         double[] xValues = {1.0, 2.0, 3.0};
@@ -70,6 +75,7 @@ public class ArrayTabulatedFunctionTest {
         Assert.assertFalse(function.equalsTF(f2));
         Assert.assertFalse(function.equalsTF(null));
     }
+
     @Test
     public void testGetX() {
         // Assuming the function is already created
@@ -135,7 +141,6 @@ public class ArrayTabulatedFunctionTest {
 
     @Test
     public void testFloorIndexOfX() {
-        // Assuming the function is already created
         ArrayTabulatedFunction function = createFunction();
         Assert.assertEquals(1, function.floorIndexOfX(2.5));
         assertThrows(IllegalArgumentException.class, () -> function.floorIndexOfX(0));
@@ -177,7 +182,7 @@ public class ArrayTabulatedFunctionTest {
     @Test
     public void testEquals() {
         ArrayTabulatedFunction f = createFunction();
-        ArrayTabulatedFunction f2 =  createFunction();
+        ArrayTabulatedFunction f2 = createFunction();
         IdentityFunction r = new IdentityFunction();
         Assert.assertTrue(f.equals(f2));
         Assert.assertFalse(f.equals(r));
@@ -189,6 +194,7 @@ public class ArrayTabulatedFunctionTest {
         ArrayTabulatedFunction f2 = createFunction();
         Assert.assertEquals(f.hashCode(), f2.hashCode());
     }
+
     @Test
     public void testClone() throws CloneNotSupportedException {
         ArrayTabulatedFunction f = createFunction();
@@ -204,5 +210,21 @@ public class ArrayTabulatedFunctionTest {
         Assert.assertEquals(4, function.getCount()); //проверяем, что кол-во элементов увеличилось на 1
         Assert.assertEquals(2.5, function.getX(2), 0.0001);
         Assert.assertEquals(5.5, function.getY(2), 0.0001);
+    }
+
+    @Test
+    public void testIterator() {
+        ArrayTabulatedFunction function = createFunction();
+        Iterator<Point> iterator = function.iterator();
+        int i = 0, j = 0;
+        while (iterator.hasNext()) {
+            Point point = iterator.next();
+            Assert.assertEquals(point.getX(), function.getX(i), 0.1);
+            Assert.assertEquals(point.getY(), function.getY(i++), 0.1);
+        }
+      //  for (Point point : function) {
+        //    Assert.assertEquals(point.getX(), function.getX(j), 0.1);
+          //  Assert.assertEquals(point.getY(), function.getY(j++), 0.1);
+      //  }
     }
 }
