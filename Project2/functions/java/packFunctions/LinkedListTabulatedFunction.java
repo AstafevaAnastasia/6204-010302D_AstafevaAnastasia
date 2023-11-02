@@ -391,20 +391,16 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
 
     public Iterator<Point> iterator() {
         return new Iterator<Point>() {
-            private Node curNode=head;
+            private Node node = head;
             @Override
-            public boolean hasNext() {
-                return ((curNode.next!=head)&&(curNode.next!=null));
-            }
-
+            public boolean hasNext() { return ((node.next != head) && (node.next != null)); }
             @Override
             public Point next() {
-                if(hasNext()){
-                    Point point=new Point(curNode.x,curNode.y);
-                    curNode=curNode.next;
+                if( hasNext()) {
+                    Point point = new Point(node.x,node.y);
+                    node = node.next;
                     return point;
-                }
-                else throw new NoSuchElementException();
+                } else throw new NoSuchElementException();
             }
         };
     }

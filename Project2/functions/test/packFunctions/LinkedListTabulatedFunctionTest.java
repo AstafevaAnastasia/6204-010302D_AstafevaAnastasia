@@ -11,7 +11,6 @@ import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 public class LinkedListTabulatedFunctionTest {
 
