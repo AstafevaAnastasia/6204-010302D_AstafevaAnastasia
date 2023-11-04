@@ -222,9 +222,9 @@ public class ArrayTabulatedFunctionTest {
             Assert.assertEquals(point.getX(), function.getX(i), 0.1);
             Assert.assertEquals(point.getY(), function.getY(i++), 0.1);
         }
-      //  for (Point point : function) {
-        //    Assert.assertEquals(point.getX(), function.getX(j), 0.1);
-          //  Assert.assertEquals(point.getY(), function.getY(j++), 0.1);
-      //  }
+        for (Point point : function) {
+            Assert.assertEquals(point.getX(), function.getX(j), 0.1);
+            Assert.assertEquals(point.getY(), function.getY(j++), 0.1);
+        }
     }
 }

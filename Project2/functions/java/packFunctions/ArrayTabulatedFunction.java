@@ -12,7 +12,7 @@ import java.util.stream.IntStream;
 
 // класс табулированных функций, значения которых хранятся в массиве
 // данный класс расширает реализацию класса AbsractTabulatedFunction и реализует интерфейс Removable
-public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements Removable, Insertable, Iterable {
+public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements Removable, Insertable, Iterable<Point> {
     private double[] xValues; // приватное поле значений x
     private double[] yValues; // приватное поле значений y
     private int count; // приватное поле количества элементов
