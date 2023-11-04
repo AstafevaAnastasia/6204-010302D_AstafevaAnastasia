@@ -1,7 +1,10 @@
 // mock-объект для того, чтобы потом можно было протестировать класс абстрактных
 // табулированных функций
 package packFunctions;
-public class MockTabulatedFunction extends AbstractTabulatedFunction {
+
+import java.util.Iterator;
+
+public  class MockTabulatedFunction extends AbstractTabulatedFunction  {
     // ну все поля приватные завершенные с переменными
     private final double x0;
     private final double x1;
@@ -35,6 +38,11 @@ public class MockTabulatedFunction extends AbstractTabulatedFunction {
     @Override
     protected double extrapolateRight(double x) {
         return y1;
+    }
+
+    @Override
+    public Iterator<Point> iterator() {
+        return null;
     }
 
     @Override
