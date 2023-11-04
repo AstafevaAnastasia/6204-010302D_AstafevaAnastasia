@@ -1,6 +1,8 @@
 package packFunctions;
 
-public class UnmodifiableTabulatedFunction implements TabulatedFunction{
+import java.util.Iterator;
+
+public class UnmodifiableTabulatedFunction implements TabulatedFunction, Iterable<Point>{
     TabulatedFunction function;
 
     public UnmodifiableTabulatedFunction(TabulatedFunction function) {
@@ -50,5 +52,10 @@ public class UnmodifiableTabulatedFunction implements TabulatedFunction{
     @Override
     public double apply(double x) {
         return function.apply(x);
+    }
+
+    @Override
+    public Iterator<Point> iterator() {
+        return null;
     }
 }
