@@ -101,4 +101,79 @@ public class TabulatedFunctionOperationTest {
         assertEquals(-1, result1.getY(2), 0);
         assertEquals(3, result2.getY(2), 0);
     }
+
+    @Test
+    public void testMultiply() throws InconsistentFunctionsException {
+        TabulatedFunction f1 = arrayFactory.create(new double[]{1, 2, 3}, new double[]{2, 4, 6});
+        TabulatedFunction f3 = linkedListFactory.create(new double[]{1, 2, 3}, new double[]{3, 5, 7});
+        TabulatedFunction f2 = arrayFactory.create(new double[]{1, 2, 3}, new double[]{2, 3, 4});
+        TabulatedFunction f4 = linkedListFactory.create(new double[]{1, 2, 3}, new double[]{1, 1, 1});
+
+        TabulatedFunction result = operationService.multiply(f1, f2);;
+        TabulatedFunction result1 = operationService.multiply(f1, f3);
+        TabulatedFunction result2 = operationService.multiply(f4, f2);
+
+        assertNotNull(result);
+        assertNotNull(result1);
+        assertNotNull(result2);
+        assertEquals(3, result.getCount());
+        assertEquals(3, result1.getCount());
+        assertEquals(3, result2.getCount());
+        assertEquals(1, result.getX(0), 0);
+        assertEquals(1, result1.getX(0), 0);
+        assertEquals(1, result2.getX(0), 0);
+        assertEquals(4, result.getY(0), 0);
+        assertEquals(6, result1.getY(0), 0);
+        assertEquals(2, result2.getY(0), 0);
+        assertEquals(2, result.getX(1), 0);
+        assertEquals(2, result1.getX(1), 0);
+        assertEquals(2, result2.getX(1), 0);
+        assertEquals(12, result.getY(1), 0);
+        assertEquals(20, result1.getY(1), 0);
+        assertEquals(3, result2.getY(1), 0);
+        assertEquals(3, result.getX(2), 0);
+        assertEquals(3, result1.getX(2), 0);
+        assertEquals(3, result2.getX(2), 0);
+        assertEquals(24, result.getY(2), 0);
+        assertEquals(42, result1.getY(2), 0);
+        assertEquals(4, result2.getY(2), 0);
+    }
+
+    @Test
+    public void testDivide() throws InconsistentFunctionsException {
+        TabulatedFunction f1 = arrayFactory.create(new double[]{1, 2, 3}, new double[]{2, 4, 6});
+        TabulatedFunction f3 = linkedListFactory.create(new double[]{1, 2, 3}, new double[]{3, 5, 7});
+        TabulatedFunction f2 = arrayFactory.create(new double[]{1, 2, 3}, new double[]{2, 3, 4});
+        TabulatedFunction f4 = linkedListFactory.create(new double[]{1, 2, 3}, new double[]{1, 2, 3});
+
+        TabulatedFunction result = operationService.divide(f1, f2);
+        TabulatedFunction result1 = operationService.divide(f1, f3);
+        TabulatedFunction result2 = operationService.divide(f4, f2);
+
+        assertNotNull(result);
+        assertNotNull(result1);
+        assertNotNull(result2);
+        assertEquals(3, result.getCount());
+        assertEquals(3, result1.getCount());
+        assertEquals(3, result2.getCount());
+        assertEquals(1, result.getX(0), 0);
+        assertEquals(1, result1.getX(0), 0);
+        assertEquals(1, result2.getX(0), 0);
+        assertEquals(1, result.getY(0), 0);
+        assertEquals(0.6666666666666667, result1.getY(0), 0.000000000001);
+        assertEquals(0.5, result2.getY(0), 0.01);
+        assertEquals(2, result.getX(1), 0);
+        assertEquals(2, result1.getX(1), 0);
+        assertEquals(2, result2.getX(1), 0);
+        assertEquals(1.333333333333333, result.getY(1), 0.000000000001);
+        assertEquals(0.8, result1.getY(1), 0.01);
+        assertEquals(0.6666666666666667, result2.getY(1), 0.000000000001);
+        assertEquals(3, result.getX(2), 0);
+        assertEquals(3, result1.getX(2), 0);
+        assertEquals(3, result2.getX(2), 0);
+        assertEquals(1.5, result.getY(2), 0.01);
+        assertEquals(0.8571428571428571, result1.getY(2), 0.000000000001);
+        assertEquals(0.75, result2.getY(2), 0.01);
+    }
 }
+
