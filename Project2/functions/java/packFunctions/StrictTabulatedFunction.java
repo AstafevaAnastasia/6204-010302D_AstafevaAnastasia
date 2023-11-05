@@ -1,6 +1,9 @@
 package packFunctions;
 
-public class StrictTabulatedFunction implements TabulatedFunction {
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+public class StrictTabulatedFunction implements TabulatedFunction, Iterable<Point> {
 
     private final TabulatedFunction function; // хранит ссылку на объект другой функции, переданный в конструкторе.
 
@@ -38,7 +41,6 @@ public class StrictTabulatedFunction implements TabulatedFunction {
         return function.indexOfY(y);
     }
 
-    @Override
     public double leftBound() {
         return function.leftBound();
     }
@@ -50,5 +52,23 @@ public class StrictTabulatedFunction implements TabulatedFunction {
     // В данном случае мы бросаем исключение UnsupportedOperationException для запрета интерполяции
     public double apply(double x) {
         throw new UnsupportedOperationException("Interpolation is not allowed");
+    }
+
+    // Реализация метода iterator() для поддержки интерфейса Iterable<Point>
+    public Iterator<Point> iterator() {
+        return new Iterator<Point>() {
+            private int currentIndex = 0;
+
+            public boolean hasNext() {
+                return currentIndex < getCount();
+            }
+
+            public Point next() {
+                if (!hasNext()) {
+                    throw new NoSuchElementException();
+                }
+                return new Point(getX(currentIndex), getY(currentIndex++));
+            }
+        };
     }
 }

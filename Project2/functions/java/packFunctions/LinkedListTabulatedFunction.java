@@ -104,7 +104,7 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
     }
 
     // Метод getNode возвращает узел списка по его индексу
-    private Node getNode(int index) {
+    public Node getNode(int index) {
         if (index < 0 || index >= count) { // если индекс выходит за границы списка, выбрасываем исключение
             throw new IndexOutOfBoundsException("Index out of range: " + index);
         }
@@ -392,15 +392,19 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
     public Iterator<Point> iterator() {
         return new Iterator<Point>() {
             private Node node = head;
+            // Проверка наличия следующего элемента
             @Override
-            public boolean hasNext() {  return ((node.next != null) && ((node.next != head) || (node == head))); }
+            public boolean hasNext() { return node != null; }
+            // Получение следующей точки
             @Override
             public Point next() {
-                if( hasNext()) {
-                    Point point = new Point(node.x,node.y);
+                if(hasNext()) {
+                    Point point = new Point(node.x, node.y);
                     node = node.next;
+                    if (node == head) node = null;
                     return point;
-                } else throw new NoSuchElementException();
+                }
+                else throw new NoSuchElementException();
             }
         };
     }

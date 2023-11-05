@@ -40,7 +40,6 @@ public  class MockTabulatedFunction extends AbstractTabulatedFunction  {
         return y1;
     }
 
-    @Override
     public Iterator<Point> iterator() {
         return null;
     }
