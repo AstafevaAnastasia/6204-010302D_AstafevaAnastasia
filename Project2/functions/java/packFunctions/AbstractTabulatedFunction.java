@@ -29,7 +29,7 @@ public abstract class AbstractTabulatedFunction implements TabulatedFunction {
         }
     }
 
-    protected double inerpolate(double x,double leftX, double rightX, double leftY, double rightY) {
+    protected double interpolate(double x,double leftX, double rightX, double leftY, double rightY) {
         double v =(x-leftX);
         double u = ((rightY - leftY)/(rightX - leftX));
         return leftY + u*v;
