@@ -1,5 +1,5 @@
 package packFunctions;
-interface MathFunction {
+public interface MathFunction {
     double apply(double x);
 
     // метод с реализацией по умолчанию andThen (для сложных-сложных функций)
