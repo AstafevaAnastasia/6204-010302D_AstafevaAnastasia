@@ -39,7 +39,7 @@ public  class MockTabulatedFunction extends AbstractTabulatedFunction  {
     protected double extrapolateRight(double x) {
         return y1;
     }
-
+    
     public Iterator<Point> iterator() {
         return null;
     }
