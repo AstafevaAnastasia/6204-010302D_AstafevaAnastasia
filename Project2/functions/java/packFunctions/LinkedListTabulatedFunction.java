@@ -7,7 +7,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.stream.IntStream;
 
-public class LinkedListTabulatedFunction extends AbstractTabulatedFunction implements Insertable, Removable, Cloneable, Iterable {
+public class LinkedListTabulatedFunction extends AbstractTabulatedFunction implements Insertable, Removable, Cloneable, Iterable<Point> {
 
     private int count; // количество элементов в списке
     private Node head; // ссылка на первый элемент списка
@@ -393,7 +393,7 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
         return new Iterator<Point>() {
             private Node node = head;
             @Override
-            public boolean hasNext() { return ((node.next != head) && (node.next != null)); }
+            public boolean hasNext() { return (node != null); }
             @Override
             public Point next() {
                 if( hasNext()) {
