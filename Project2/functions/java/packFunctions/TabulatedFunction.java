@@ -1,7 +1,7 @@
 // Определяем интерфейс TabulatedFunction, расширяющий интерфейс MathFunction.
 // В нем объявлены методы для работы с табличной функцией:
 package packFunctions;
-public interface TabulatedFunction extends MathFunction {
+public interface TabulatedFunction extends MathFunction, Iterable<Point> {
     int getCount(); // - возвращает количество точек в табличной функции.
     double getX(int index); // - возвращает значение аргумента для точки с заданным индексом в табличной функции.
     double getY(int index); // - возвращает значение функции для точки с заданным индексом в табличной функции.

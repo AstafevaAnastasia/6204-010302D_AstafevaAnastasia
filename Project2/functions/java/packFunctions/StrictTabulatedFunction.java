@@ -1,6 +1,8 @@
 package packFunctions;
 
-public class StrictTabulatedFunction implements TabulatedFunction {
+import java.util.Iterator;
+
+public class StrictTabulatedFunction implements TabulatedFunction  {
 
     private final TabulatedFunction function; // хранит ссылку на объект другой функции, переданный в конструкторе.
 
@@ -45,6 +47,11 @@ public class StrictTabulatedFunction implements TabulatedFunction {
 
     public double rightBound() {
         return function.rightBound();
+    }
+
+    @Override
+    public Iterator<Point> iterator() {
+        return null;
     }
 
     // В данном случае мы бросаем исключение UnsupportedOperationException для запрета интерполяции
