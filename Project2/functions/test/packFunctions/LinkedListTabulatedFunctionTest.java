@@ -10,6 +10,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
+import java.util.Iterator;
 
 public class LinkedListTabulatedFunctionTest {
 
@@ -215,4 +216,29 @@ public class LinkedListTabulatedFunctionTest {
             function.interpolate(3.5, 1);
         });
     }
+
+    @Test
+    public void testIteratorWhile() {
+        Iterator<Point> iterator = ((LinkedListTabulatedFunction)function).iterator();
+        int i = 0;
+        while (iterator.hasNext()) {
+            Point point = iterator.next();
+            assertEquals(point.x, i, 0);
+            assertEquals(point.y, i * i, 0);
+            i++;
+        }
+    }
+
+    @Test
+    public void testIteratorForEach() {
+        LinkedListTabulatedFunction functionNew = new LinkedListTabulatedFunction(xValues, yValues);
+        int i = 0;
+        for (Object point : functionNew) {
+            Point p = (Point) point;
+            assertEquals(p.x, i, 0);
+            assertEquals(p.y, i * i, 0);
+            i++;
+        }
+    }
+
 }

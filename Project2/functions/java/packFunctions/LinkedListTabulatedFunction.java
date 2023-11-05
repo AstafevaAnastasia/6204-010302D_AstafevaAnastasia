@@ -1,14 +1,13 @@
-// Класс LinkedListTabulatedFunction реализует интерфейсы TabulatedFunction, Insertable, Removable
-// Класс LinkedListTabulatedFunction реализует интерфейсы TabulatedFunction, Insertable, Removable
 package packFunctions;
 
 import exceptions.ArrayIsNotSortedException;
 import exceptions.DifferentLengthOfArraysException;
 import exceptions.InterpolationException;
-
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.stream.IntStream;
-public class LinkedListTabulatedFunction extends AbstractTabulatedFunction implements Insertable, Removable, Cloneable {
+
+public class LinkedListTabulatedFunction extends AbstractTabulatedFunction implements Insertable, Removable, Cloneable, Iterable {
 
     private int count; // количество элементов в списке
     private Node head; // ссылка на первый элемент списка
@@ -389,7 +388,20 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
         yValues[count - 1] = head.prev.y; // добавляем координату y последнего узла в массив
         return new LinkedListTabulatedFunction(xValues, yValues);
     }
+
     public Iterator<Point> iterator() {
-        throw new UnsupportedOperationException("Iterator is not supported for ArrayTabulatedFunction");
+        return new Iterator<Point>() {
+            private Node node = head;
+            @Override
+            public boolean hasNext() { return ((node.next != head) && (node.next != null)); }
+            @Override
+            public Point next() {
+                if( hasNext()) {
+                    Point point = new Point(node.x,node.y);
+                    node = node.next;
+                    return point;
+                } else throw new NoSuchElementException();
+            }
+        };
     }
 }
