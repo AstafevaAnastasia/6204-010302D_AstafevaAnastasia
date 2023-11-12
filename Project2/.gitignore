@@ -35,6 +35,4 @@ build/
 .vscode/
 
 ### Mac OS ###
-.DS_Store
-
-Project2\output
+/output
