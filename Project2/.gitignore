@@ -35,4 +35,5 @@ build/
 .vscode/
 
 ### Mac OS ###
-/output
+Project2/output
+Project2/input
