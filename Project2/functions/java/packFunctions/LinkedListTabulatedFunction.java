@@ -9,7 +9,6 @@ import java.util.stream.IntStream;
 
 public class LinkedListTabulatedFunction extends AbstractTabulatedFunction implements Insertable, Removable, Cloneable, Iterable<Point> {
 
-    private int count; // количество элементов в списке
     private Node head; // ссылка на первый элемент списка
 
     // Вложенный класс Node описывает узел списка
@@ -336,17 +335,17 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
         count--; // Уменьшаем кол-во элементов
     }
 
-    public String toString() {
-        StringBuilder sb = new StringBuilder(); // создаем объект StringBuilder для построения строки
-        Node current = head;
-        for (int i = 0; i < count; i++) {
-            String node = current.toString();
-            sb.append(node).append(", ");
-            current = current.next;
-        }
-        sb.delete(sb.length() - 2, sb.length()); // удаляем последнюю запятую и пробел
-        return sb.toString();
-    }
+//    public String toString() {
+//        StringBuilder sb = new StringBuilder(); // создаем объект StringBuilder для построения строки
+//        Node current = head;
+//        for (int i = 0; i < count; i++) {
+//            String node = current.toString();
+//            sb.append(node).append(", ");
+//            current = current.next;
+//        }
+//        sb.delete(sb.length() - 2, sb.length()); // удаляем последнюю запятую и пробел
+//        return sb.toString();
+//    }
 
     public boolean equals(Object o) {
         if (o == null) return false;
