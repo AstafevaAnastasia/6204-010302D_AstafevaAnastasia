@@ -1,7 +1,6 @@
 package operations;
 
 import packFunctions.MathFunction;
-import packFunctions.TabulatedFunction;
 
 public abstract class SteppingDifferentialOperator implements DifferentialOperator<MathFunction > {
     protected double step;

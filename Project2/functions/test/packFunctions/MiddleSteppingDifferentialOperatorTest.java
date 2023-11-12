@@ -2,7 +2,7 @@ package packFunctions;
 
 import org.junit.Test;
 import operations.MiddleSteppingDifferentialOperator;
-import packFunctions.MathFunction.*;
+
 import static org.junit.Assert.*;
 public class MiddleSteppingDifferentialOperatorTest {
 
