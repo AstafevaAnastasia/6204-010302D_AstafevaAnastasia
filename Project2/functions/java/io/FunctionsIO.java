@@ -1,9 +1,6 @@
 package io;
 import packFunctions.TabulatedFunction;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.BufferedReader;
+import java.io.*;
 import packFunctions.factory.TabulatedFunctionFactory;
 public final class FunctionsIO {
     private FunctionsIO() throws UnsupportedOperationException {
@@ -25,6 +22,21 @@ public final class FunctionsIO {
         }
 
         printWriter.flush();
+    }
+
+    public static void writeTabulatedFunction(BufferedOutputStream outputStream, TabulatedFunction function) throws IOException {
+        DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
+        int pointCount = function.getCount();
+        // Записываем количество точек
+        dataOutputStream.writeInt(pointCount);
+        // Записываем значения всех точек
+        for (int i = 0; i < pointCount; i++) {
+            double x = function.getX(i);
+            double y = function.getY(i);
+            dataOutputStream.writeDouble(x);
+            dataOutputStream.writeDouble(y);
+        }
+        dataOutputStream.flush();
     }
 
 }
