@@ -2,7 +2,7 @@ package packFunctions;
 import exceptions.ArrayIsNotSortedException;
 import exceptions.DifferentLengthOfArraysException;
 import exceptions.InterpolationException;
-
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -12,10 +12,11 @@ import java.util.stream.IntStream;
 
 // класс табулированных функций, значения которых хранятся в массиве
 // данный класс расширает реализацию класса AbsractTabulatedFunction и реализует интерфейс Removable
-public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements Removable, Insertable, Iterable<Point> {
+public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements Removable, Insertable, Iterable<Point>, Serializable {
     private double[] xValues; // приватное поле значений x
     private double[] yValues; // приватное поле значений y
     private int count; // приватное поле количества элементов
+    private static final long serialVersionUID = 123456789L;
 
     public String toString() {
         StringBuilder mass = new StringBuilder();
