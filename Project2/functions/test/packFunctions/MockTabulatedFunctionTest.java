@@ -1,5 +1,5 @@
 package packFunctions;
-import packFunctions.AbstractTabulatedFunction;
+import packFunctions.*;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import exceptions.ArrayIsNotSortedException;

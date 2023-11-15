@@ -131,12 +131,11 @@ public class LinkedListTabulatedFunctionTest {
         assertEquals(16.0, function.getY(2), 0.0001);
     }
 
-    // Метод toString для узла тестируется через toString для списка, т.к. он там используется
-    @Test
-    public void testToString() {
-        String expected = "(0.0; 0.0), (1.0; 1.0), (2.0; 4.0), (3.0; 9.0), (4.0; 16.0)";
-        assertEquals(expected, function.toString());
-    }
+//    @Test
+//    public void testToString() {
+//        String expected = "(0.0; 0.0), (1.0; 1.0), (2.0; 4.0), (3.0; 9.0), (4.0; 16.0)";
+//        assertEquals(expected, function.toString());
+//    }
 
     @Test
     public void testHashCode() {
@@ -236,4 +235,11 @@ public class LinkedListTabulatedFunctionTest {
             i++;
         }
     }
+
+    @Test
+    public void testToStringAbstract() {
+        AbstractTabulatedFunction func = new LinkedListTabulatedFunction(xValues, yValues); // создание экземпляра функции
+        assertEquals("LinkedListTabulatedFunction size = 5\n[0.0; 0.0]\n[1.0; 1.0]\n[2.0; 4.0]\n[3.0; 9.0]\n[4.0; 16.0]", func.toString());
+    }
+
 }
