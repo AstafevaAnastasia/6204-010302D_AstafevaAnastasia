@@ -6,17 +6,22 @@ import exceptions.InterpolationException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.stream.IntStream;
+import java.io.*;
 
-public class LinkedListTabulatedFunction extends AbstractTabulatedFunction implements Insertable, Removable, Cloneable, Iterable<Point> {
+public class LinkedListTabulatedFunction extends AbstractTabulatedFunction implements Insertable, Removable, Cloneable, Iterable<Point>, Serializable {
 
     private Node head; // ссылка на первый элемент списка
 
+    private static final long serialVersionUID = 1L;
+
     // Вложенный класс Node описывает узел списка
-    static class Node {
+    static class Node implements Serializable {
         public double x; // значение аргумента функции
         public double y; // значение функции
         public Node next; // ссылка на следующий элемент списка
         public Node prev; // ссылка на предыдущий элемент списка
+
+        private static final long serialVersionUID = 1L;
 
         public Node(double x, double y) {
             this.x = x;
