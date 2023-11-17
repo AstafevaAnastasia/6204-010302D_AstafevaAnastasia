@@ -6,7 +6,7 @@ import packFunctions.factory.ArrayTabulatedFunctionFactory;
 
 public class TabulatedDifferentialOperator implements DifferentialOperator<TabulatedFunction> {
 
-    protected TabulatedFunctionFactory factory;
+    protected static TabulatedFunctionFactory factory;
 
     public TabulatedDifferentialOperator(TabulatedFunctionFactory factory) {
         this.factory = factory;
@@ -24,7 +24,6 @@ public class TabulatedDifferentialOperator implements DifferentialOperator<Tabul
         return factory;
     }
 
-    @Override
     public TabulatedFunction derive(TabulatedFunction function) {
         Point[] array = TabulatedFunctionOperationService.asPoints(function);
         double[] xValues = new double[function.getCount()];

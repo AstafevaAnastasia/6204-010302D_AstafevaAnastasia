@@ -6,6 +6,8 @@
       <sourceFolder url="file://$MODULE_DIR$/Project2/functions/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Project2/functions/test" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/Project2/functions" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/Project2/.idea/shelf" />
+      <excludeFolder url="file://$MODULE_DIR$/Project2/output" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

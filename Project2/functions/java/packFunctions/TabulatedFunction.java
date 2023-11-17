@@ -1,8 +1,9 @@
 // Определяем интерфейс TabulatedFunction, расширяющий интерфейс MathFunction.
 // В нем объявлены методы для работы с табличной функцией:
 package packFunctions;
+import java.io.Serializable;
 import java.util.Iterator;
-public interface TabulatedFunction extends MathFunction, Iterable<Point> {
+public interface TabulatedFunction extends MathFunction, Iterable<Point>, Serializable {
     int getCount(); // - возвращает количество точек в табличной функции.
     double getX(int index); // - возвращает значение аргумента для точки с заданным индексом в табличной функции.
     double getY(int index); // - возвращает значение функции для точки с заданным индексом в табличной функции.
