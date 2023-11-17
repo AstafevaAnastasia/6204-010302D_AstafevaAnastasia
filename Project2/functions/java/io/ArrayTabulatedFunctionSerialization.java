@@ -25,20 +25,22 @@ public class ArrayTabulatedFunctionSerialization {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        try (BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(filePath))) {
-            TabulatedFunction deserializedFunction1 = (TabulatedFunction) FunctionsIO.deserialize(inputStream);
-            System.out.println("ArrayTabulatedFunction: " + deserializedFunction1);
-        }
+        try {
+            try (BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(filePath))) {
+                TabulatedFunction deserializedFunction1 = (TabulatedFunction) FunctionsIO.deserialize(inputStream);
+                System.out.println("ArrayTabulatedFunction: " + deserializedFunction1);
+            }
 
-        try (BufferedInputStream inputStream2 = new BufferedInputStream(new FileInputStream(filePath))) {
-            TabulatedFunction deserializedFunction2 = (TabulatedFunction) FunctionsIO.deserialize(inputStream2);
-            System.out.println("First derivative: " + deserializedFunction2);
-        }
+            try (BufferedInputStream inputStream2 = new BufferedInputStream(new FileInputStream(filePath))) {
+                TabulatedFunction deserializedFunction2 = (TabulatedFunction) FunctionsIO.deserialize(inputStream2);
+                System.out.println("First derivative: " + deserializedFunction2);
+            }
 
-        try (BufferedInputStream inputStream3 = new BufferedInputStream(new FileInputStream(filePath))) {
-            TabulatedFunction deserializedFunction3 = (TabulatedFunction) FunctionsIO.deserialize(inputStream3);
-            System.out.println("Second derivative: " + deserializedFunction3);
-        } catch (IOException e) {
+            try (BufferedInputStream inputStream3 = new BufferedInputStream(new FileInputStream(filePath))) {
+                TabulatedFunction deserializedFunction3 = (TabulatedFunction) FunctionsIO.deserialize(inputStream3);
+                System.out.println("Second derivative: " + deserializedFunction3);
+            }
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
