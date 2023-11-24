@@ -54,12 +54,12 @@ public abstract class AbstractTabulatedFunction implements TabulatedFunction {
 
     @Override
     public String toString() {
-        StringBuilder s = new StringBuilder();
-        s.append(getClass().getSimpleName() + " size = " + count + "\n");
-        for(Point point : this){
+        StringBuilder s = new StringBuilder(); // Создаем новый объект StringBuilder для формирования строки
+        s.append(getClass().getSimpleName() + " size = " + count + "\n"); // Добавляем название класса и количество элементов в массиве
+        for(Point point : this){ // Проходим по каждой точке в массиве и добавляем их координаты в строку
             s.append("[" + point.x + "; " + point.y + "]" + "\n");
         }
-        s.deleteCharAt(s.length()-1);
+        s.deleteCharAt(s.length()-1); // Удаляем последний символ (символ переноса строки) из строки
         return s.toString();
     }
 
