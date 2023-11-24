@@ -4,6 +4,7 @@ import packFunctions.TabulatedFunction;
 public class MultiplyingTask implements Runnable{
 
     private final TabulatedFunction tabulatedFunction;
+    private boolean completed;
 
     public MultiplyingTask (TabulatedFunction tabulatedFunction) {
         this.tabulatedFunction = tabulatedFunction;
@@ -11,8 +12,14 @@ public class MultiplyingTask implements Runnable{
     @Override
     public void run() {
         for(int i = 0; i < tabulatedFunction.getCount(); ++i) {
-            tabulatedFunction.setY(i, tabulatedFunction.getY(i) * 2);
+            synchronized (tabulatedFunction) {
+                tabulatedFunction.setY(i, tabulatedFunction.getY(i) * 2);
+                completed = true;
+            }
         }
         System.out.println("Поток " + Thread.currentThread().getName() + " закончил свою работу");
+    }
+    public boolean isCompleted() {
+        return completed;
     }
 }
