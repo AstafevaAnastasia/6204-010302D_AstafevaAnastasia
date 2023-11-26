@@ -1,5 +1,6 @@
 package packFunctions;
 
+import concurrent.SynchronizedTabulatedFunction;
 import org.junit.Test;
 import operations.TabulatedDifferentialOperator;
 import packFunctions.factory.*;
@@ -40,5 +41,16 @@ public class TabulatedDifferentialOperatorTest {
         assertEquals(dydxValues[2], df.getY(2), 0.0);
         assertEquals(dydxValues[3], df.getY(3), 0.0);
         assertEquals(dydxValues[4], df.getY(3), 0.0);
+    }
+
+    TabulatedFunction function = new LinkedListTabulatedFunction(new double[]{0, 1, 2, 3, 4}, new double[]{0, 1, 4, 9, 16});
+
+    @Test
+    public void testDeriveSyncronously() {
+        TabulatedDifferentialOperator operator = new TabulatedDifferentialOperator();
+        TabulatedFunction derivedFunction = operator.deriveSynchronously(function);
+        assertEquals(5, derivedFunction.getCount());
+        assertEquals(1, derivedFunction.getY(0), 0.0001);
+        assertEquals(3, derivedFunction.getY(1), 0.0001);
     }
 }
