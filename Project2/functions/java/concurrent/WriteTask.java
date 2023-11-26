@@ -14,9 +14,12 @@ public class WriteTask implements Runnable {
     public void run() {
         // проходимся по всем элементам функции
         for (int i = 0; i < function.getCount(); i++) {
-            function.setY(i, value);  // устанавливаем значение value для y-координаты элемента с индексом i
-            String s = String.format("Writing for index %d complete ", i);
-            System.out.println(s);
+            // синхронизируем доступ к функции
+            synchronized (function) {
+                function.setY(i, value);  // устанавливаем значение value для y-координаты элемента с индексом i
+                String s = String.format("Writing for index %d complete ", i);
+                System.out.println(s);
+            }
         }
     }
 
