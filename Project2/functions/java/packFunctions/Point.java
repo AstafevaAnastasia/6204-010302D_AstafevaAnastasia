@@ -16,5 +16,17 @@ public class Point {
     public double getX() {
         return x;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof Point)) {
+            return false;
+        }
+        Point other = (Point) obj;
+        return Double.compare(x, other.x) == 0 && Double.compare(y, other.y) == 0;
+    }
 }
 

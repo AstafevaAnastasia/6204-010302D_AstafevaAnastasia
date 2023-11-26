@@ -2,6 +2,8 @@ package concurrent;
 
 import packFunctions.Point;
 import packFunctions.TabulatedFunction;
+import operations.TabulatedFunctionOperationService;
+import java.util.NoSuchElementException;
 
 import java.util.Iterator;
 
@@ -77,8 +79,26 @@ public class SynchronizedTabulatedFunction implements TabulatedFunction {
 
     @Override
     public Iterator<Point> iterator() {
+        // Блок синхронизации на объекте tabulatedFunction
         synchronized (tabulatedFunction) {
-            return tabulatedFunction.iterator();
+            // Создание копии точек функции с помощью метода asPoints() из класса TabulatedFunctionOperationService
+            Point[] copy = TabulatedFunctionOperationService.asPoints(tabulatedFunction);
+            // Возвращение нового итератора для копии точек функции
+            return new Iterator<Point>() {
+                private int currentIndex = 0; // Индекс текущей точки в копии
+                @Override
+                public boolean hasNext() {
+                    return currentIndex < copy.length; // Проверка наличия следующей точки в копии
+                }
+
+                @Override
+                public Point next() {
+                    if (!hasNext()) {
+                        throw new NoSuchElementException();
+                    }
+                    return copy[currentIndex++];  // Получение следующей точки из копии
+                }
+            };
         }
     }
 
