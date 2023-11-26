@@ -2,8 +2,8 @@ package concurrent;
 import packFunctions.TabulatedFunction;
 
 public class WriteTask implements Runnable {
-    private TabulatedFunction function;
-    private double value;
+    private final TabulatedFunction function;
+    private final double value;
 
     // конструктор класса, принимающий на вход объект типа TabulatedFunction и значение типа double
     public WriteTask(TabulatedFunction tabulatedFunction, double value) {
