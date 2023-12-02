@@ -145,11 +145,11 @@ public class TabulatedFunctionUI extends JFrame {
 
     public static void main(String[] args) {
         // ѕример использовани€ первого конструктора
-         double[] xValues = {};
-         double[] yValues = {};
-         new TabulatedFunctionUI(xValues, yValues);
+         //double[] xValues = {};
+         //double[] yValues = {};
+       //  new TabulatedFunctionUI(xValues, yValues);
 
         // ѕример использовани€ второго конструктора
-        //new TabulatedFunctionUI();
+        new TabulatedFunctionUI();
     }
 }
