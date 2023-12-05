@@ -4,89 +4,39 @@ import packFunctions.factory.ArrayTabulatedFunctionFactory;
 import packFunctions.factory.LinkedListTabulatedFunctionFactory;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class MainWindow extends JFrame implements ActionListener {
+public class MainWindow extends JFrame {
     private ArrayTabulatedFunctionFactory arrFactory; // объект фабрики дл€ массива
     private LinkedListTabulatedFunctionFactory listFactory; // объект фабрики дл€ св€зного списка
-    private JButton settingsButton;
 
     public MainWindow() {
-        setTitle("Menu");
-        setSize(400, 300);
+        super("Main Window");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        JButton openSettingsButton = new JButton("Settings");
-        openSettingsButton.addActionListener(e -> openSettingsDialog());
+        JMenuBar menuBar = new JMenuBar();
+        JMenu settingsMenu = new JMenu("Settings");
+        JMenuItem openSettingsItem = new JMenuItem("Open Settings");
+        openSettingsItem.addActionListener(e -> openSettingsDialog());
+        settingsMenu.add(openSettingsItem);
+        menuBar.add(settingsMenu);
+        setJMenuBar(menuBar);
 
-        JPanel panel = new JPanel();
-        panel.add(openSettingsButton);
-        add(panel);
+        arrFactory = new ArrayTabulatedFunctionFactory(); // по умолчанию используем массив
+        listFactory = new LinkedListTabulatedFunctionFactory(); // по умолчанию используем св€зный список
+
+        setSize(400, 300);
+        setLocationRelativeTo(null); // отображаем окно по центру экрана
     }
 
     private void openSettingsDialog() {
-        JDialog settingsDialog = new JDialog(this, "Settings", true);
-        settingsDialog.setSize(400, 300);
-
-        JRadioButton arrayButton = new JRadioButton("Array");
-        arrayButton.addActionListener(e -> updateFactory(new ArrayTabulatedFunctionFactory()));
-
-        JRadioButton listButton = new JRadioButton("Linked List");
-        listButton.addActionListener(e -> updateFactory(new LinkedListTabulatedFunctionFactory()));
-
-        ButtonGroup group = new ButtonGroup();
-        group.add(arrayButton);
-        group.add(listButton);
-
-        // ѕо умолчанию выбран массив
-        arrayButton.setSelected(true);
-
-        // «агрузить предыдущий выбор (например, из настроек или сохраненного файла)
-
-        JButton saveButton = new JButton("Save");
-        saveButton.setLocation(100,100);
-        saveButton.addActionListener(e -> {
-            if (arrayButton.isSelected()) {
-                // сохранить выбор массива
-            } else if (listButton.isSelected()) {
-                // сохранить выбор св€зного списка
-            }
-            settingsDialog.dispose();
-        });
-
-        settingsDialog.add(arrayButton);
-        settingsDialog.add(listButton);
-        settingsDialog.add(saveButton);
-
-        settingsDialog.pack();
+        SettingsDialog settingsDialog = new SettingsDialog(this, arrFactory, listFactory);
         settingsDialog.setVisible(true);
     }
 
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == settingsButton) {
-            openSettingsDialog();
-        }
-    }
-
     public static void main(String[] args) {
-        MainWindow mainWindow = new MainWindow();
-        mainWindow.setVisible(true);
-    }
-
-    public void updateFactory(ArrayTabulatedFunctionFactory newFactory) {
-        arrFactory = newFactory;
-    }
-
-    public void updateFactory(LinkedListTabulatedFunctionFactory newFactory) {
-        listFactory = newFactory;
-    }
-
-    public ArrayTabulatedFunctionFactory getArrayFactory() {
-        return arrFactory;
-    }
-
-    public LinkedListTabulatedFunctionFactory getLinkedListFactory() {
-        return listFactory;
+        SwingUtilities.invokeLater(() -> {
+            MainWindow mainWindow = new MainWindow();
+            mainWindow.setVisible(true);
+        });
     }
 }
