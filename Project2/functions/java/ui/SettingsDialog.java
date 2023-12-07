@@ -41,9 +41,9 @@ public class SettingsDialog extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (useArrayFactory) {
-                    updateArrayFactory(arrFactory);
+                    ((MainWindow) parent).updateArrayFactory(arrFactory);
                 } else {
-                    updateListFactory(listFactory);
+                    ((MainWindow) parent).updateListFactory(listFactory);
                 }
                 dispose();
             }
@@ -56,20 +56,13 @@ public class SettingsDialog extends JDialog {
         setLocationRelativeTo(parent);
     }
 
+
     public ArrayTabulatedFunctionFactory getArrayFactory() {
         return arrFactory;
     }
 
     public LinkedListTabulatedFunctionFactory getListFactory() {
         return listFactory;
-    }
-
-    public void updateArrayFactory(ArrayTabulatedFunctionFactory newFactory) {
-        this.arrFactory = newFactory;
-    }
-
-    public void updateListFactory(LinkedListTabulatedFunctionFactory newFactory) {
-        this.listFactory = newFactory;
     }
 
     private class FactorySelectionListener implements ActionListener {
@@ -83,4 +76,5 @@ public class SettingsDialog extends JDialog {
             }
         }
     }
+
 }
