@@ -4,26 +4,20 @@ import packFunctions.*;
 import packFunctions.TabulatedFunction;
 import packFunctions.factory.*;
 import packFunctions.MathFunction;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class TabulatedFunctionUI extends JFrame {
     private JComboBox<String> functionComboBox;
     private Map<String, MathFunction> functionMap;
     private JTextField intervalTextField;
-
     private JTextField pointsField = new JTextField();
     private JButton createButton;
     private JTable table;
-    private DefaultTableModel tableModel;
-
+    private DefaultTableModel tableModel = new DefaultTableModel();
     private TabulatedFunctionFactory factory; // Фабрика для создания табулированных функций
 
     // Конструктор для создания таблицы из массивов x и y
@@ -32,124 +26,154 @@ public class TabulatedFunctionUI extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(400, 300);
         setLayout(new FlowLayout());
-        createTable();
 
+        pointsField = new JTextField(10);
+        createButton = new JButton("Создать");
 
-        // Заполнение таблицы значениями из массивов x и y
-        for (int i = 0; i < xValues.length; i++) {
-            xValues[i] = Double.parseDouble(tableModel.getValueAt(i, 0).toString());
-            yValues[i] = Double.parseDouble(tableModel.getValueAt(i, 1).toString());
-        }
+        createButton.addActionListener(e -> createTable(xValues, yValues));
+        add(pointsField);
+        add(createButton);
 
         setVisible(true);
     }
 
-    // Конструктор для создания таблицы из выбранной MathFunction
+    // конструктор для окна, в котором задается математическая функция
     public TabulatedFunctionUI() {
-        setTitle("Tabulated Function Creator");
+        functionMap = new TreeMap<>();
+        functionMap.put("Квадратичная функция", new SqrFunction());
+        functionMap.put("Тождественная функция", new IdentityFunction());
+        functionMap.put("Косинус двойного аргумента", new CosTwoArgFunction());
+        functionMap.put("Косинус", new CosineFunction());
+
+        setTitle("Создание табулированной функции");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(400, 300);
-        setLayout(new GridLayout(4, 2));
 
-        // Инициализация выпадающего списка функций
-        functionComboBox = new JComboBox<>();
-        add(new JLabel("Function:"));
-        add(functionComboBox);
-
-        // Инициализация текстового поля для ввода количества точек
+        // Создаем компоненты интерфейса
+        functionComboBox = new JComboBox<>(functionMap.keySet().toArray(new String[0]));
         pointsField = new JTextField();
-        add(new JLabel("Points:"));
-        add(pointsField);
-
-        // Инициализация текстового поля для ввода интервала
         intervalTextField = new JTextField();
-        add(new JLabel("Interval:"));
-        add(intervalTextField);
+        JButton createButton = new JButton("Создать");
 
-        // Инициализация кнопки "Create"
-        createButton = new JButton("Create");
+        // Устанавливаем компоновку
+        setLayout(new GridLayout(4, 2));
+        add(new JLabel("Функция:"));
+        add(functionComboBox);
+        add(new JLabel("Количество точек:"));
+        add(pointsField);
+        add(new JLabel("Интервал (начало-конец):"));
+        add(intervalTextField);
+        add(new JLabel()); // Пустая метка для выравнивания кнопки
         add(createButton);
 
-        // Заполнение отображения с названиями функций и объектами MathFunction
-        functionMap = new HashMap<>();
-        functionMap.put("Identity Function", new IdentityFunction());
-        functionMap.put("Sin Function", new CosTwoArgFunction());
-        functionMap.put("Cos Function", new CosineFunction());
-        functionMap.put("Exp Function", new SqrFunction());
-        // Добавьте остальные функции в отображение functionMap
+        setVisible(true);
+        createButton.addActionListener(e -> {
+            try {
+                // Получаем выбранную функцию
+                String selectedFunctionName = functionComboBox.getSelectedItem().toString();
+                MathFunction selectedFunction = functionMap.get(selectedFunctionName);
 
-        // Получение названий функций для отображения в выпадающем списке
-        String[] functionNames = functionMap.keySet().toArray(new String[0]);
-        Arrays.sort(functionNames);
-        functionComboBox.setModel(new DefaultComboBoxModel<>(functionNames));
+                // Получаем значения из текстовых полей
+                int points = Integer.parseInt(pointsField.getText());
+                String intervalText = intervalTextField.getText();
+                String[] intervalParts = intervalText.split("-");
+                double start, end;
 
-        // Обработчик события нажатия на кнопку "Create"
-        createButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                createFunction();
+                if (intervalParts.length == 2) {
+                    start = Double.parseDouble(intervalParts[0]);
+                    end = Double.parseDouble(intervalParts[1]);
+                } else throw new Exception();
+
+                // Создаем табулированную функцию с использованием фабрики
+                TabulatedFunctionFactory factory = new ArrayTabulatedFunctionFactory();
+                TabulatedFunction tabulatedFunction = factory.createTabulatedFunction(selectedFunction, start, end, points);
+
+                // вывожу на консоль для проверки работы
+                System.out.println("Создана табулированная функция: " + tabulatedFunction);
+
+                // Закрываем окно
+                dispose();
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(TabulatedFunctionUI.this,
+                        "Некорректные значения", "Ошибка", JOptionPane.ERROR_MESSAGE);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(TabulatedFunctionUI.this,
+                        "Ошибка: " + ex.getMessage(), "Ошибка", JOptionPane.ERROR_MESSAGE);
             }
         });
-
-        setVisible(true);
     }
 
     // Метод для создания таблицы
-    private void createTable() {
-        // Создание модели таблицы
-        tableModel = new DefaultTableModel();
-        tableModel.addColumn("X");
-        tableModel.addColumn("Y");
-
-        int pointsCount = Integer.parseInt(pointsField.getText());
-        for (int i = 0; i < pointsCount; i++) {
-            tableModel.addRow(new Object[]{"", ""});
-        }
-        // Создание таблицы со сгенерированной моделью
-        table = new JTable(tableModel);
-        table.setPreferredScrollableViewportSize(new Dimension(350, 200));
-        JScrollPane scrollPane = new JScrollPane(table);
-
-        // Добавление панели прокрутки с таблицей на форму
-        add(scrollPane);
-        revalidate();
-        repaint();
-        pack();
-        setLocationRelativeTo(null);
-    }
-
-    // Метод для создания функции на основе значений из таблицы
-    private void createFunction() {
-        // Получение значений из таблицы и создание объекта TabulatedFunction
-        int rowCount = tableModel.getRowCount();
-        double[] xValues = new double[rowCount];
-        double[] yValues = new double[rowCount];
-
-        for (int i = 0; i < rowCount; i++) {
-            xValues[i] = Double.parseDouble(tableModel.getValueAt(i, 0).toString());
-            yValues[i] = Double.parseDouble(tableModel.getValueAt(i, 1).toString());
-        }
-
+    private void createTable(double[] xValues, double[] yValues) {
         try {
-            // Создание табулированной функции с использованием фабрики
-            TabulatedFunction tabulatedFunction = factory.create(xValues, yValues);
-            dispose(); // Закрытие текущего окна
+            int pointsCount = Integer.parseInt(pointsField.getText());
+            if (pointsCount < 0) throw new IllegalArgumentException("Некорректное значение");
 
-            // Дополните код для использования созданной табулированной функции
-            // ...
+            tableModel = new DefaultTableModel();
+            tableModel.addColumn("X");
+            tableModel.addColumn("Y");
 
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            for (int i = 0; i < pointsCount; i++) tableModel.addRow(new Object[]{"", ""});
+
+            // Создание таблицы
+            table = new JTable(tableModel);
+            table.setPreferredScrollableViewportSize(new Dimension(350, 200));
+            JScrollPane scrollPane = new JScrollPane(table);
+            scrollPane.setPreferredSize(new Dimension(300, 200));
+
+            createButton.setText("Значения введены");
+            createButton.addActionListener(e -> {
+                try {
+                    createFunction(xValues, yValues);
+                    dispose(); // Закрытие окна после создания функции
+                } catch (Exception ex) {
+                    ExceptionHandler.handleException(ex);
+                }
+            });
+
+            add(scrollPane);
+            revalidate();
+            repaint();
+            pack();
+            setLocationRelativeTo(null);
+        } catch (Exception e) {
+            ExceptionHandler.handleException(e);
+        }
+    }
+    // Метод для создания функции на основе значений из таблицы
+    private void createFunction(double[] xValues, double[] yValues) {
+        // Получение значений из таблицы и создание объекта TabulatedFunction
+        try {
+            int rowCount = tableModel.getRowCount();
+            xValues = new double[rowCount];
+            yValues = new double[rowCount];
+
+            for (int i = 0; i < rowCount; i++) {
+                xValues[i] = Double.parseDouble(tableModel.getValueAt(i, 0).toString());
+                yValues[i] = Double.parseDouble(tableModel.getValueAt(i, 1).toString());
+            }
+
+            try {
+                // Создание табулированной функции с использованием фабрики
+                TabulatedFunction tabulatedFunction = factory.create(xValues, yValues);
+                System.out.println("Табулированная функция " + tabulatedFunction);
+                dispose();
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception e) {
+            ExceptionHandler.handleException(e);
         }
     }
 
     public static void main(String[] args) {
-        // Пример использования первого конструктора
-         //double[] xValues = {};
+        // пример использования первого конструктора
+        // double[] xValues = {};
          //double[] yValues = {};
-       //  new TabulatedFunctionUI(xValues, yValues);
+         //new TabulatedFunctionUI(xValues, yValues);
 
         // Пример использования второго конструктора
-        new TabulatedFunctionUI();
+         new TabulatedFunctionUI();
     }
 }
