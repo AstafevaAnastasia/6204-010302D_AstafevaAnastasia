@@ -8,11 +8,12 @@ import javax.swing.*;
 public class MainWindow extends JFrame {
     private ArrayTabulatedFunctionFactory arrFactory; // объект фабрики для массива
     private LinkedListTabulatedFunctionFactory listFactory; // объект фабрики для связного списка
+    private SettingsDialog settingsDialog; // поле для хранения экземпляра класса SettingsDialog
 
     public MainWindow() {
         super("Main Window");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        settingsDialog = new SettingsDialog(this, arrFactory, listFactory); // инициализация экземпляра класса SettingsDialog
         JMenuBar menuBar = new JMenuBar();
         JMenu settingsMenu = new JMenu("Settings");
         JMenuItem openSettingsItem = new JMenuItem("Open Settings");
@@ -29,7 +30,6 @@ public class MainWindow extends JFrame {
     }
 
     private void openSettingsDialog() {
-        SettingsDialog settingsDialog = new SettingsDialog(this, arrFactory, listFactory);
         settingsDialog.setVisible(true);
     }
 
@@ -39,4 +39,14 @@ public class MainWindow extends JFrame {
             mainWindow.setVisible(true);
         });
     }
+
+    public void updateArrayFactory(ArrayTabulatedFunctionFactory newFactory) {
+        this.arrFactory = newFactory;
+    }
+
+    public void updateListFactory(LinkedListTabulatedFunctionFactory newFactory) {
+        this.listFactory = newFactory;
+    }
+
+
 }
