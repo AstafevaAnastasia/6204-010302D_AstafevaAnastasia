@@ -2,12 +2,14 @@ package ui;
 
 import packFunctions.factory.ArrayTabulatedFunctionFactory;
 import packFunctions.factory.LinkedListTabulatedFunctionFactory;
+import packFunctions.factory.TabulatedFunctionFactory;
 
 import javax.swing.*;
 
 public class MainWindow extends JFrame {
-    private ArrayTabulatedFunctionFactory arrFactory; // объект фабрики дл€ массива
-    private LinkedListTabulatedFunctionFactory listFactory; // объект фабрики дл€ св€зного списка
+    public TabulatedFunctionFactory factory; // ‘абрика дл€ создани€ табулированных функций
+    public ArrayTabulatedFunctionFactory arrFactory; // объект фабрики дл€ массива
+    public LinkedListTabulatedFunctionFactory listFactory; // объект фабрики дл€ св€зного списка
     private SettingsDialog settingsDialog; // поле дл€ хранени€ экземпл€ра класса SettingsDialog
 
     public MainWindow() {
@@ -15,11 +17,15 @@ public class MainWindow extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         settingsDialog = new SettingsDialog(this, arrFactory, listFactory); // инициализаци€ экземпл€ра класса SettingsDialog
         JMenuBar menuBar = new JMenuBar();
-        JMenu settingsMenu = new JMenu("Settings");
-        JMenuItem openSettingsItem = new JMenuItem("Open Settings");
+        JMenu settingsMenu = new JMenu("Menu");
+        JMenuItem openSettingsItem = new JMenuItem("Settings");
         openSettingsItem.addActionListener(e -> openSettingsDialog());
         settingsMenu.add(openSettingsItem);
         menuBar.add(settingsMenu);
+        JMenuItem openOperationWindowItem = new JMenuItem("Operation Window");
+        openOperationWindowItem.addActionListener(e -> openOperationWindow());
+        settingsMenu.add(openOperationWindowItem);
+
         setJMenuBar(menuBar);
 
         arrFactory = new ArrayTabulatedFunctionFactory(); // по умолчанию используем массив
@@ -33,20 +39,21 @@ public class MainWindow extends JFrame {
         settingsDialog.setVisible(true);
     }
 
+    private void openOperationWindow() {
+        TabulatedFunctionOperationWindow operationWindow = new TabulatedFunctionOperationWindow(this);
+        operationWindow.setVisible(true);
+    }
+
+
+    public void updateFactory(TabulatedFunctionFactory newFactory) {
+        this.factory = newFactory;
+    }
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             MainWindow mainWindow = new MainWindow();
             mainWindow.setVisible(true);
         });
     }
-
-    public void updateArrayFactory(ArrayTabulatedFunctionFactory newFactory) {
-        this.arrFactory = newFactory;
-    }
-
-    public void updateListFactory(LinkedListTabulatedFunctionFactory newFactory) {
-        this.listFactory = newFactory;
-    }
-
 
 }

@@ -23,7 +23,6 @@ public class TabulatedFunctionUI extends JFrame {
     // Конструктор для создания таблицы из массивов x и y
     public TabulatedFunctionUI(double[] xValues, double[] yValues) {
         setTitle("Tabulated Function");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(400, 300);
         setLayout(new FlowLayout());
 
@@ -46,7 +45,6 @@ public class TabulatedFunctionUI extends JFrame {
         functionMap.put("Косинус", new CosineFunction());
 
         setTitle("Создание табулированной функции");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(400, 300);
 
         // Создаем компоненты интерфейса
