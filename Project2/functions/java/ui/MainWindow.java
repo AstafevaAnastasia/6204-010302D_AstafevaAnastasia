@@ -44,7 +44,6 @@ public class MainWindow extends JFrame {
         operationWindow.setVisible(true);
     }
 
-
     public void updateFactory(TabulatedFunctionFactory newFactory) {
         this.factory = newFactory;
     }

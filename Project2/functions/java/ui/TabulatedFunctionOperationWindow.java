@@ -9,17 +9,16 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 
 public class TabulatedFunctionOperationWindow extends JFrame {
     private TabulatedFunctionOperationService operationService;
 
-    private JTable function1Table;
-    private JTable function2Table;
-    private JTable resultTable;
+    public JTable function1Table;
+    public JTable function2Table;
+    public JTable resultTable;
+
+    private TabulatedFunctionUI tabulatedFunctionUI;
 
     public TabulatedFunctionOperationWindow(JFrame parent) {
         operationService = new TabulatedFunctionOperationService();
@@ -58,8 +57,14 @@ public class TabulatedFunctionOperationWindow extends JFrame {
         createButton1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                TabulatedFunctionUI dialog = new TabulatedFunctionUI();
-                dialog.setVisible(true);
+                int rowCount = model1.getRowCount();
+                double[] xValues = new double[rowCount];
+                double[] yValues = new double[rowCount];
+                for (int i = 0; i < rowCount; i++) {
+                    xValues[i] = Double.parseDouble(model1.getValueAt(i, 0).toString());
+                    yValues[i] = Double.parseDouble(model1.getValueAt(i, 1).toString());
+                }
+                tabulatedFunctionUI = new TabulatedFunctionUI(xValues, yValues);
             }
         });
 
@@ -91,8 +96,7 @@ public class TabulatedFunctionOperationWindow extends JFrame {
         createButton2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                TabulatedFunctionUI dialog = new TabulatedFunctionUI();
-                dialog.setVisible(true);
+
             }
         });
 
@@ -156,6 +160,8 @@ public class TabulatedFunctionOperationWindow extends JFrame {
         panel.add(saveResultButton);
 
         add(panel);
+        // Отображаем форму
+        setVisible(true);
         setLocationRelativeTo(parent); // отображаем окно по центру экрана
     }
 }
