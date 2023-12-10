@@ -2,7 +2,9 @@ package ui;
 
 import io.*;
 import operations.*;
+import packFunctions.ArrayTabulatedFunction;
 import packFunctions.TabulatedFunction;
+import packFunctions.factory.TabulatedFunctionFactory;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -19,6 +21,11 @@ public class TabulatedFunctionOperationWindow extends JFrame {
     public JTable resultTable;
 
     private TabulatedFunctionUI tabulatedFunctionUI;
+    private TabulatedFunction firstFunction;
+    private TabulatedFunctionFactory firstFunctionFactory;
+    private TabulatedFunction secondFunction;
+    private TabulatedFunctionFactory secondFunctionFactory;
+    private TabulatedFunction resultFunction;
 
     public TabulatedFunctionOperationWindow(JFrame parent) {
         operationService = new TabulatedFunctionOperationService();
@@ -26,7 +33,7 @@ public class TabulatedFunctionOperationWindow extends JFrame {
         setTitle("Tabulated Function Operation");
         setSize(800, 400);
 
-        JPanel panel = new JPanel(new GridLayout(5, 3));
+        JPanel panel = new JPanel(new GridLayout(6, 3));
 
         function1Table = new JTable();
         DefaultTableModel model1 = new DefaultTableModel();
@@ -46,11 +53,13 @@ public class TabulatedFunctionOperationWindow extends JFrame {
         model3.addColumn("Y");
         resultTable.setModel(model3);
 
-        JButton createButton1 = new JButton("Create First Function");
+        JButton createButton1 = new JButton("Create First Function with arrays");
+        JButton createButton3 = new JButton("Create First Function with mathfunc");
         JButton loadButton1 = new JButton("Load First Function");
         JButton saveButton1 = new JButton("Save First Function");
 
-        JButton createButton2 = new JButton("Create Second Function");
+        JButton createButton2 = new JButton("Create Second Function with arrays");
+        JButton createButton4 = new JButton("Create Second Function with mathfunc");
         JButton loadButton2 = new JButton("Load Second Function");
         JButton saveButton2 = new JButton("Save Second Function");
 
@@ -65,14 +74,16 @@ public class TabulatedFunctionOperationWindow extends JFrame {
                     yValues[i] = Double.parseDouble(model1.getValueAt(i, 1).toString());
                 }
                 tabulatedFunctionUI = new TabulatedFunctionUI(xValues, yValues);
+                System.out.println(firstFunction);
             }
         });
 
-        loadButton1.addActionListener(new ActionListener() {
+        createButton3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 TabulatedFunctionUI dialog = new TabulatedFunctionUI();
                 dialog.setVisible(true);
+                System.out.println(firstFunction);
             }
         });
 
@@ -85,7 +96,7 @@ public class TabulatedFunctionOperationWindow extends JFrame {
                     File file = fileChooser.getSelectedFile();
                     try {
                         BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file));
-                        FunctionsIO.serialize(outputStream, (TabulatedFunction) function1Table);
+                        io.FunctionsIO.serialize(outputStream, (TabulatedFunction) function1Table);
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }
@@ -96,11 +107,20 @@ public class TabulatedFunctionOperationWindow extends JFrame {
         createButton2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                int rowCount = model2.getRowCount();
+                double[] xValues = new double[rowCount];
+                double[] yValues = new double[rowCount];
+                for (int i = 0; i < rowCount; i++) {
+                    xValues[i] = Double.parseDouble(model2.getValueAt(i, 0).toString());
+                    yValues[i] = Double.parseDouble(model2.getValueAt(i, 1).toString());
+                }
+                tabulatedFunctionUI = new TabulatedFunctionUI(xValues, yValues);
+                System.out.println(secondFunction);
 
             }
         });
 
-        loadButton2.addActionListener(new ActionListener() {
+        createButton4.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 TabulatedFunctionUI dialog = new TabulatedFunctionUI();
@@ -125,38 +145,66 @@ public class TabulatedFunctionOperationWindow extends JFrame {
             }
         });
 
+
+
         JButton addButton = new JButton("Add");
         JButton subtractButton = new JButton("Subtract");
         JButton multiplyButton = new JButton("Multiply");
         JButton divideButton = new JButton("Divide");
         JButton saveResultButton = new JButton("Save Result");
 
-        GridLayout layout = new GridLayout(5,3, 1, 1);
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                resultFunction = operationService.add(firstFunction, secondFunction);
+                System.out.println(resultFunction);
+            }
+        });
+
+        loadButton2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        GridLayout layout = new GridLayout(6,3, 1, 1);
         panel.add(new JScrollPane(function1Table));
         panel.add(new JScrollPane(function2Table));
         panel.add(new JScrollPane(resultTable));
 
         panel.add(createButton1);
+      //  panel.add(createButton3);
         panel.add(createButton2);
+       // panel.add(createButton4);
         panel.add(addButton);
+
+        panel.add(createButton3);
+        panel.add(createButton4);
+      //  panel.add(loadButton1);
+        //panel.add(loadButton2);
+        panel.add(subtractButton);
 
         panel.add(loadButton1);
         panel.add(loadButton2);
-        panel.add(subtractButton);
+       // panel.add(saveButton1);
+        //panel.add(saveButton2);
+        panel.add(multiplyButton);
 
         panel.add(saveButton1);
         panel.add(saveButton2);
-        panel.add(multiplyButton);
+        panel.add(divideButton);
 
         createButton1.setLayout(layout);
+        createButton3.setLayout(layout);
         loadButton1.setLayout(layout);
         saveButton1.setLayout(layout);
 
         createButton2.setLayout(layout);
+        createButton4.setLayout(layout);
         loadButton2.setLayout(layout);
         saveButton2.setLayout(layout);
 
-        panel.add(divideButton);
+        // panel.add(divideButton);
         panel.add(saveResultButton);
 
         add(panel);
