@@ -1,6 +1,7 @@
 package ui;
 
 import javax.swing.*;
+import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -8,60 +9,42 @@ import packFunctions.TabulatedFunction;
 import operations.TabulatedDifferentialOperator;
 
 public class DifferentiationWindow extends JFrame {
-    private TabulatedFunctionUI initialFunction;
+    private TabulatedFunctionDatabase initialFunction;
     private TabulatedFunction differentiatedFunction;
     private TabulatedDifferentialOperator tabulatedDifferentialOperator;
-
     double[] xValues;
     double[] yValues;
-
     public DifferentiationWindow() {
 
-        setTitle("Differentiation of a tabulated function");
+        setTitle("Дифференцирование");
         setSize(600, 400);
 
         // Создание компонентов окна
-        JPanel panel = new JPanel(new GridLayout(1, 2));
-        JPanel initialFunctionPanel = new JPanel();
-        JPanel differentiatedFunctionPanel = new JPanel();
+        JPanel panel = new JPanel(new FlowLayout());
 
-        JButton createButton = new JButton("Create");
+        JButton createButton = new JButton("Создать");
         panel.add(createButton);
         createButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                initialFunction = new TabulatedFunctionUI(xValues, yValues);
-
-                // Создание компонентов для отображения начальной функции
-                JLabel initialFunctionLabel = new JLabel("Initial Function: ");
-                JTextField initialFunctionTextField = new JTextField(20);
-                initialFunctionTextField.setText(initialFunction.toString());
-                initialFunctionPanel.add(initialFunctionLabel);
-                initialFunctionPanel.add(initialFunctionTextField);
+                new TabulatedFunctionUI(xValues, yValues);
             }
         });
-        initialFunctionPanel.add(createButton);
 
-        JButton differentiateButton = new JButton("Differentiate");
+
+
+        JButton differentiateButton = new JButton("Дифференцировать");
+        panel.add(differentiateButton);
         differentiateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Выполнение дифференцирования
                 differentiatedFunction = tabulatedDifferentialOperator.deriveSynchronously((TabulatedFunction)initialFunction);
-                // Обновление отображения дифференцированной функции
-                // Создание компонентов для отображения результата дифференцирования
-                JLabel diffFunctionLabel = new JLabel("Differentiated Function: ");
-                JTextField diffFunctionTextField = new JTextField(20);
-                diffFunctionTextField.setText(differentiatedFunction.toString());
-                differentiatedFunctionPanel.add(diffFunctionLabel);
-                differentiatedFunctionPanel.add(diffFunctionTextField);
+                JLabel diffFunctionLabel = new JLabel("Дифференцированная функция: ");
+                add(diffFunctionLabel);
+                //add(differentiatedFunction);
             }
         });
-        panel.add(differentiateButton);
-
-        // Добавление панелей на основную панель окна
-        panel.add(initialFunctionPanel);
-        panel.add(differentiatedFunctionPanel);
 
         // Установка основной панели в окне
         add(panel);

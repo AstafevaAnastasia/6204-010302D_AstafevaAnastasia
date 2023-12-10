@@ -25,6 +25,9 @@ public class MainWindow extends JFrame {
         JMenuItem openOperationWindowItem = new JMenuItem("Operation Window");
         openOperationWindowItem.addActionListener(e -> openOperationWindow());
         settingsMenu.add(openOperationWindowItem);
+        JMenuItem openDifferentiationWindowItem = new JMenuItem("Differentiation Window");
+        openDifferentiationWindowItem.addActionListener(e -> openDifferentiationWindow());
+        settingsMenu.add(openDifferentiationWindowItem);
 
         setJMenuBar(menuBar);
 
@@ -42,6 +45,11 @@ public class MainWindow extends JFrame {
     private void openOperationWindow() {
         TabulatedFunctionOperationWindow operationWindow = new TabulatedFunctionOperationWindow(this);
         operationWindow.setVisible(true);
+    }
+
+    private void openDifferentiationWindow() {
+        DifferentiationWindow differentiationWindow = new DifferentiationWindow();
+        differentiationWindow.setVisible(true);
     }
 
     public void updateFactory(TabulatedFunctionFactory newFactory) {

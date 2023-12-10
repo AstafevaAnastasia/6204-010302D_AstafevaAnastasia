@@ -8,6 +8,7 @@ import packFunctions.factory.TabulatedFunctionFactory;
 public class TabulatedFunctionDatabase {
     private Node head;
     private int size;
+    public static TabulatedFunctionDatabase database;
 
     public static TabulatedFunctionFactory factory; // Фабрика для создания табулированных функций
     public static ArrayTabulatedFunctionFactory arrFactory; // объект фабрики для массива
@@ -24,6 +25,22 @@ public class TabulatedFunctionDatabase {
                     + " (" + tabulatedFunction.leftBound() + ";" + tabulatedFunction.rightBound() + ")");
         }
     }
+
+    public void addFunction(TabulatedFunction function) {
+        Node newNode = new Node(function);
+        if (head == null) {
+            head = newNode;
+        } else {
+            Node current = head;
+            while (current.next != null) {
+                current = current.next;
+            }
+            current.next = newNode;
+            newNode.prev = current;
+        }
+        size++;
+    }
+
 
     public int getSize(){return size;}
 }
