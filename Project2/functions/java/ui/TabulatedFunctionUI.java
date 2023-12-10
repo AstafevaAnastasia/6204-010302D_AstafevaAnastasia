@@ -20,6 +20,7 @@ public class TabulatedFunctionUI extends JFrame {
     private DefaultTableModel tableModel = new DefaultTableModel();
     private TabulatedFunctionFactory factory = new ArrayTabulatedFunctionFactory(); // Фабрика для создания табулированных функций
 
+    TabulatedFunction tabulatedFunction;
     // Конструктор для создания таблицы из массивов x и y
     public TabulatedFunctionUI(double[] xValues, double[] yValues) {
         setTitle("Tabulated Function");
@@ -84,7 +85,7 @@ public class TabulatedFunctionUI extends JFrame {
 
                 // Создаем табулированную функцию с использованием фабрики
                 TabulatedFunctionFactory factory = new ArrayTabulatedFunctionFactory();
-                TabulatedFunction tabulatedFunction = factory.createTabulatedFunction(selectedFunction, start, end, points);
+                tabulatedFunction = factory.createTabulatedFunction(selectedFunction, start, end, points);
 
                 // вывожу на консоль для проверки работы
                 System.out.println("Создана табулированная функция: " + tabulatedFunction);
@@ -121,12 +122,9 @@ public class TabulatedFunctionUI extends JFrame {
 
             createButton.setText("Значения введены");
             createButton.addActionListener(e -> {
-                try {
-                    createFunction(xValues, yValues);
-                    dispose(); // Закрытие окна после создания функции
-                } catch (Exception ex) {
-                    ExceptionHandler.handleException(ex);
-                }
+                System.out.println("Cool");
+                createFunction(xValues, yValues);
+                dispose(); // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
             });
 
             add(scrollPane);
@@ -147,13 +145,19 @@ public class TabulatedFunctionUI extends JFrame {
             yValues = new double[rowCount];
 
             for (int i = 0; i < rowCount; i++) {
-                xValues[i] = Double.parseDouble(tableModel.getValueAt(i, 0).toString());
-                yValues[i] = Double.parseDouble(tableModel.getValueAt(i, 1).toString());
+                try {
+                    xValues[i] = Double.parseDouble(tableModel.getValueAt(i, 0).toString());
+                    System.out.println(xValues[i] + " " + i);
+                    yValues[i] = Double.parseDouble(tableModel.getValueAt(i, 1).toString());
+                    System.out.println(yValues[i] + " " + i);
+                } catch (NumberFormatException ex) {
+                    ex.printStackTrace();
+                }
             }
 
             try {
                 // Создание табулированной функции с использованием фабрики
-                TabulatedFunction tabulatedFunction = factory.create(xValues, yValues);
+                tabulatedFunction = factory.create(xValues, yValues);
                 System.out.println("Табулированная функция " + tabulatedFunction);
                 dispose();
 
@@ -165,6 +169,9 @@ public class TabulatedFunctionUI extends JFrame {
         }
     }
 
+    public TabulatedFunction getTabulatedFunction() {
+        return tabulatedFunction;
+    }
     public static void main(String[] args) {
         // пример использования первого конструктора
         // double[] xValues = {};
