@@ -9,7 +9,7 @@ import packFunctions.TabulatedFunction;
 import operations.TabulatedDifferentialOperator;
 
 public class DifferentiationWindow extends JFrame {
-    private TabulatedFunctionDatabase initialFunction;
+    private TabulatedFunction initialFunction;
     private TabulatedFunction differentiatedFunction;
     private TabulatedDifferentialOperator tabulatedDifferentialOperator;
     double[] xValues;
@@ -28,6 +28,25 @@ public class DifferentiationWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new TabulatedFunctionUI(xValues, yValues);
+                initialFunction = (TabulatedFunction)TabulatedFunctionDatabase.database;
+
+                Object[][] tableData = new Object[initialFunction.getCount()][2];
+                for (int i = 0; i < initialFunction.getCount(); i++) {
+                    tableData[i][0] = initialFunction.getX(i);
+                    tableData[i][1] = initialFunction.getY(i);
+                }
+
+                // Создание заголовков столбцов
+                String[] columnNames = {"X", "Y"};
+
+                // Создание JTable с данными и заголовками
+                JTable table = new JTable(tableData, columnNames);
+
+                // Создание панели прокрутки для таблицы, если количество строк больше, чем может отобразиться на экране
+                JScrollPane scrollPane = new JScrollPane(table);
+
+                // Добавление панели прокрутки на экран
+                add(scrollPane);
             }
         });
 
@@ -42,7 +61,24 @@ public class DifferentiationWindow extends JFrame {
                 differentiatedFunction = tabulatedDifferentialOperator.deriveSynchronously((TabulatedFunction)initialFunction);
                 JLabel diffFunctionLabel = new JLabel("Дифференцированная функция: ");
                 add(diffFunctionLabel);
-                //add(differentiatedFunction);
+                // Создание двумерного массива для хранения данных таблицы
+                Object[][] tableData = new Object[differentiatedFunction.getCount()][2];
+                for (int i = 0; i < differentiatedFunction.getCount(); i++) {
+                    tableData[i][0] = differentiatedFunction.getX(i);
+                    tableData[i][1] = differentiatedFunction.getY(i);
+                }
+
+                // Создание заголовков столбцов
+                String[] columnNames = {"X", "Y"};
+
+                // Создание JTable с данными и заголовками
+                JTable table = new JTable(tableData, columnNames);
+
+                // Создание панели прокрутки для таблицы, если количество строк больше, чем может отобразиться на экране
+                JScrollPane scrollPane = new JScrollPane(table);
+
+                // Добавление панели прокрутки на экран
+                add(scrollPane);
             }
         });
 
