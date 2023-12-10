@@ -1,6 +1,5 @@
 package ui;
 
-import javafx.scene.control.Tab;
 import packFunctions.factory.ArrayTabulatedFunctionFactory;
 import packFunctions.factory.LinkedListTabulatedFunctionFactory;
 import packFunctions.factory.TabulatedFunctionFactory;
@@ -25,7 +24,7 @@ public class MainWindow extends JFrame {
         menuBar.add(settingsMenu);
         JMenuItem openOperationWindowItem = new JMenuItem("Operation Window");
         openOperationWindowItem.addActionListener(e -> openOperationWindow());
-        settingsMenu.add(openOperationWindowItem);;
+        settingsMenu.add(openOperationWindowItem);
 
         setJMenuBar(menuBar);
 
@@ -44,7 +43,6 @@ public class MainWindow extends JFrame {
         TabulatedFunctionOperationWindow operationWindow = new TabulatedFunctionOperationWindow(this);
         operationWindow.setVisible(true);
     }
-
 
     public void updateFactory(TabulatedFunctionFactory newFactory) {
         this.factory = newFactory;

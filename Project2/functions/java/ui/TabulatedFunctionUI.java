@@ -7,13 +7,10 @@ import packFunctions.MathFunction;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.util.Locale;
-import java.util.Locale.LanguageRange;
 import java.util.Map;
 import java.util.TreeMap;
 
 public class TabulatedFunctionUI extends JFrame {
-    Locale russianLocale = new Locale("ru", "RU");
     private JComboBox<String> functionComboBox;
     private Map<String, MathFunction> functionMap;
     private JTextField intervalTextField;
@@ -21,17 +18,16 @@ public class TabulatedFunctionUI extends JFrame {
     private JButton createButton;
     private JTable table;
     private DefaultTableModel tableModel = new DefaultTableModel();
-    TabulatedFunctionFactory factory = new ArrayTabulatedFunctionFactory(); // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+    private TabulatedFunctionFactory factory = new ArrayTabulatedFunctionFactory(); // Фабрика для создания табулированных функций
 
-    public static TabulatedFunction tabulatedFunction;
-    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ x пїЅ y
+    // Конструктор для создания таблицы из массивов x и y
     public TabulatedFunctionUI(double[] xValues, double[] yValues) {
         setTitle("Tabulated Function");
         setSize(400, 300);
         setLayout(new FlowLayout());
 
         pointsField = new JTextField(10);
-        createButton = new JButton("Create");
+        createButton = new JButton("Создать");
 
         createButton.addActionListener(e -> createTable(xValues, yValues));
         add(pointsField);
@@ -40,42 +36,42 @@ public class TabulatedFunctionUI extends JFrame {
         setVisible(true);
     }
 
-    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ, пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+    // конструктор для окна, в котором задается математическая функция
     public TabulatedFunctionUI() {
         functionMap = new TreeMap<>();
-        functionMap.put("РљРІР°РґСЂР°С‚РёС‡РЅР°СЏ С„СѓРЅРєС†РёСЏ", new SqrFunction());
-        functionMap.put("РўРѕР¶РґРµСЃС‚РІРµРЅРЅР°СЏ С„СѓРЅРєС†РёСЏ", new IdentityFunction());
-        functionMap.put("РљРѕСЃРёРЅСѓСЃ РґРІРѕР№РЅРѕРіРѕ СѓРіР»Р°", new CosTwoArgFunction());
-        functionMap.put("РљРѕСЃРёРЅСѓСЃ", new CosineFunction());
+        functionMap.put("Квадратичная функция", new SqrFunction());
+        functionMap.put("Тождественная функция", new IdentityFunction());
+        functionMap.put("Косинус двойного аргумента", new CosTwoArgFunction());
+        functionMap.put("Косинус", new CosineFunction());
 
-        setTitle("TabulatedFunction");
+        setTitle("Создание табулированной функции");
         setSize(400, 300);
 
-        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+        // Создаем компоненты интерфейса
         functionComboBox = new JComboBox<>(functionMap.keySet().toArray(new String[0]));
         pointsField = new JTextField();
         intervalTextField = new JTextField();
-        JButton createButton = new JButton("done");
+        JButton createButton = new JButton("Создать");
 
-        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+        // Устанавливаем компоновку
         setLayout(new GridLayout(4, 2));
-        add(new JLabel("func:"));
+        add(new JLabel("Функция:"));
         add(functionComboBox);
-        add(new JLabel("points:"));
+        add(new JLabel("Количество точек:"));
         add(pointsField);
-        add(new JLabel("interval (start-end):"));
+        add(new JLabel("Интервал (начало-конец):"));
         add(intervalTextField);
-        add(new JLabel()); // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+        add(new JLabel()); // Пустая метка для выравнивания кнопки
         add(createButton);
 
         setVisible(true);
         createButton.addActionListener(e -> {
             try {
-                // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+                // Получаем выбранную функцию
                 String selectedFunctionName = functionComboBox.getSelectedItem().toString();
                 MathFunction selectedFunction = functionMap.get(selectedFunctionName);
 
-                // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+                // Получаем значения из текстовых полей
                 int points = Integer.parseInt(pointsField.getText());
                 String intervalText = intervalTextField.getText();
                 String[] intervalParts = intervalText.split("-");
@@ -86,30 +82,30 @@ public class TabulatedFunctionUI extends JFrame {
                     end = Double.parseDouble(intervalParts[1]);
                 } else throw new Exception();
 
-                // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+                // Создаем табулированную функцию с использованием фабрики
                 TabulatedFunctionFactory factory = new ArrayTabulatedFunctionFactory();
-                tabulatedFunction = factory.createTabulatedFunction(selectedFunction, start, end, points);
+                TabulatedFunction tabulatedFunction = factory.createTabulatedFunction(selectedFunction, start, end, points);
 
-                // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
-                System.out.println("С‚Р°Р±СѓР»РёСЂРѕРІР°РЅРЅР°СЏ С„СѓРЅРєС†РёСЏ: " + tabulatedFunction);
+                // вывожу на консоль для проверки работы
+                System.out.println("Создана табулированная функция: " + tabulatedFunction);
 
-                // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
+                // Закрываем окно
                 dispose();
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(TabulatedFunctionUI.this,
-                        "РћС€РёР±РєР° ", "РћС€РёР±РєР°", JOptionPane.ERROR_MESSAGE);
+                        "Некорректные значения", "Ошибка", JOptionPane.ERROR_MESSAGE);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(TabulatedFunctionUI.this,
-                        "РћС€РёР±РєР°: " + ex.getMessage(), "РћС€РёР±РєР°", JOptionPane.ERROR_MESSAGE);
+                        "Ошибка: " + ex.getMessage(), "Ошибка", JOptionPane.ERROR_MESSAGE);
             }
         });
     }
 
-    // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+    // Метод для создания таблицы
     private void createTable(double[] xValues, double[] yValues) {
         try {
             int pointsCount = Integer.parseInt(pointsField.getText());
-            if (pointsCount < 0) throw new IllegalArgumentException("РћС€РёР±РєР°");
+            if (pointsCount < 0) throw new IllegalArgumentException("Некорректное значение");
 
             tableModel = new DefaultTableModel();
             tableModel.addColumn("X");
@@ -117,17 +113,20 @@ public class TabulatedFunctionUI extends JFrame {
 
             for (int i = 0; i < pointsCount; i++) tableModel.addRow(new Object[]{"", ""});
 
-            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+            // Создание таблицы
             table = new JTable(tableModel);
             table.setPreferredScrollableViewportSize(new Dimension(350, 200));
             JScrollPane scrollPane = new JScrollPane(table);
             scrollPane.setPreferredSize(new Dimension(300, 200));
 
-            createButton.setText("done");
+            createButton.setText("Значения введены");
             createButton.addActionListener(e -> {
-                System.out.println("Cool");
-                createFunction(xValues, yValues);
-                dispose(); // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+                try {
+                    createFunction(xValues, yValues);
+                    dispose(); // Закрытие окна после создания функции
+                } catch (Exception ex) {
+                    ExceptionHandler.handleException(ex);
+                }
             });
 
             add(scrollPane);
@@ -139,29 +138,23 @@ public class TabulatedFunctionUI extends JFrame {
             ExceptionHandler.handleException(e);
         }
     }
-    // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+    // Метод для создания функции на основе значений из таблицы
     private void createFunction(double[] xValues, double[] yValues) {
-        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ TabulatedFunction
+        // Получение значений из таблицы и создание объекта TabulatedFunction
         try {
             int rowCount = tableModel.getRowCount();
             xValues = new double[rowCount];
             yValues = new double[rowCount];
 
             for (int i = 0; i < rowCount; i++) {
-                try {
-                    xValues[i] = Double.parseDouble(tableModel.getValueAt(i, 0).toString());
-                    System.out.println(xValues[i] + " " + i);
-                    yValues[i] = Double.parseDouble(tableModel.getValueAt(i, 1).toString());
-                    System.out.println(yValues[i] + " " + i);
-                } catch (NumberFormatException ex) {
-                    ex.printStackTrace();
-                }
+                xValues[i] = Double.parseDouble(tableModel.getValueAt(i, 0).toString());
+                yValues[i] = Double.parseDouble(tableModel.getValueAt(i, 1).toString());
             }
 
             try {
-                // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
-                tabulatedFunction = factory.create(xValues, yValues);
-                System.out.println("С‚Р°Р±СѓР»РёСЂРѕРІР°РЅРЅР°СЏ С„СѓРЅРєС†РёСЏ " + tabulatedFunction);
+                // Создание табулированной функции с использованием фабрики
+                TabulatedFunction tabulatedFunction = factory.create(xValues, yValues);
+                System.out.println("Табулированная функция " + tabulatedFunction);
                 dispose();
 
             } catch (Exception ex) {
@@ -172,17 +165,13 @@ public class TabulatedFunctionUI extends JFrame {
         }
     }
 
-    public static TabulatedFunction getTabulatedFunction() {
-        return tabulatedFunction;
-    }
-
     public static void main(String[] args) {
-        // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
-         double[] xValues = {};
-         double[] yValues = {};
-         new TabulatedFunctionUI(xValues, yValues);
-        // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
-         new TabulatedFunctionUI();
+        // пример использования первого конструктора
+        // double[] xValues = {};
+         //double[] yValues = {};
+         //new TabulatedFunctionUI(xValues, yValues);
 
+        // Пример использования второго конструктора
+         new TabulatedFunctionUI();
     }
 }
