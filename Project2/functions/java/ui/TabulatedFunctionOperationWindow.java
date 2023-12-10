@@ -2,7 +2,8 @@ package ui;
 
 import io.*;
 import operations.*;
-import packFunctions.TabulatedFunction;
+import packFunctions.*;
+import packFunctions.Point;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -65,6 +66,11 @@ public class TabulatedFunctionOperationWindow extends JFrame {
                     yValues[i] = Double.parseDouble(model1.getValueAt(i, 1).toString());
                 }
                 tabulatedFunctionUI = new TabulatedFunctionUI(xValues, yValues);
+                // Добавление значений x и y в модель таблицы
+                for (int i = 0; i < xValues.length; i++) {
+                    model1.addRow(new Object[]{xValues[i], yValues[i]});
+                }
+                function1Table.setModel(model1);
             }
         });
 
@@ -160,8 +166,8 @@ public class TabulatedFunctionOperationWindow extends JFrame {
         panel.add(saveResultButton);
 
         add(panel);
+        setLocationRelativeTo(parent); // отображаем окно по центру экрана
         // Отображаем форму
         setVisible(true);
-        setLocationRelativeTo(parent); // отображаем окно по центру экрана
     }
 }

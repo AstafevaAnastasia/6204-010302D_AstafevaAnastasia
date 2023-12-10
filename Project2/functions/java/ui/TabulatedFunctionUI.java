@@ -18,7 +18,7 @@ public class TabulatedFunctionUI extends JFrame {
     private JButton createButton;
     private JTable table;
     private DefaultTableModel tableModel = new DefaultTableModel();
-    private TabulatedFunctionFactory factory; // Фабрика для создания табулированных функций
+    private TabulatedFunctionFactory factory = new ArrayTabulatedFunctionFactory(); // Фабрика для создания табулированных функций
 
     // Конструктор для создания таблицы из массивов x и y
     public TabulatedFunctionUI(double[] xValues, double[] yValues) {
